@@ -1,0 +1,191 @@
+/* =========================================================
+   HOME / LINKTREE — página inicial (index.html)
+   Estilo próprio, totalmente responsivo (mobile-first).
+   ========================================================= */
+
+:root {
+  --hue: 210;
+  --primary: hsl(var(--hue), 69%, 55%);
+  --primary-dark: hsl(var(--hue), 57%, 45%);
+  --bg-grad-1: hsl(var(--hue), 70%, 96%);
+  --bg-grad-2: hsl(var(--hue), 60%, 88%);
+  --text: hsl(var(--hue), 12%, 20%);
+  --muted: hsl(var(--hue), 10%, 45%);
+  --card: rgba(255, 255, 255, 0.85);
+  --border: rgba(0, 0, 0, 0.06);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+  --radius: 16px;
+  --font: 'Poppins', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(160deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1.5rem, 5vw, 3rem) 1rem 5rem;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* Cartão central (linktree) */
+.home-linktree {
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 2rem);
+}
+
+/* Perfil */
+.profile {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.profile__img {
+  width: clamp(110px, 30vw, 150px);
+  height: clamp(110px, 30vw, 150px);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: var(--shadow);
+  transition: transform 0.35s ease;
+}
+.profile__img:hover { transform: scale(1.05); }
+
+.profile__name {
+  font-size: clamp(1.4rem, 5vw, 1.8rem);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile__description {
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  color: var(--muted);
+  font-weight: 500;
+  max-width: 30ch;
+}
+
+/* Lista de links */
+.links {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  font-size: clamp(0.95rem, 3vw, 1.05rem);
+  font-weight: 600;
+  text-align: center;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.link-item i { font-size: 1.15em; }
+
+.link-item:hover,
+.link-item:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+  outline: none;
+}
+
+.link-item--primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+.link-item--primary:hover { background: var(--primary-dark); }
+
+.link-item--secondary:hover,
+.link-item--tertiary:hover {
+  background: #fff;
+  color: var(--primary);
+}
+
+/* Ícones sociais */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin-top: 0.25rem;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  color: var(--primary);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.social-icon:hover,
+.social-icon:focus-visible {
+  transform: translateY(-4px);
+  background: var(--primary);
+  color: #fff;
+  outline: none;
+}
+
+/* Link discreto do admin (engrenagem) */
+.admin-link {
+  position: fixed;
+  bottom: 12px;
+  right: 14px;
+  color: rgba(80, 90, 100, 0.45);
+  font-size: 1.1rem;
+  z-index: 10;
+  transition: color 0.2s ease;
+}
+.admin-link:hover { color: rgba(80, 90, 100, 0.9); }
+
+/* Tema escuro (caso ativado em outra página e salvo no localStorage) */
+body.dark-theme {
+  --bg-grad-1: hsl(var(--hue), 28%, 14%);
+  --bg-grad-2: hsl(var(--hue), 30%, 9%);
+  --text: hsl(var(--hue), 8%, 92%);
+  --muted: hsl(var(--hue), 8%, 65%);
+  --card: rgba(40, 48, 58, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+/* Telas maiores: um respiro extra */
+@media screen and (min-width: 768px) {
+  body { justify-content: center; }
+}

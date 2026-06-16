@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — Portfólio Beach Tennis</title>
+  <style>
+    :root {
+      --primary: #2196F3;
+      --primary-dark: #1976D2;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #e0e4ea;
+      --text: #2c3e50;
+      --muted: #7b8794;
+      --danger: #e53935;
+      --success: #43a047;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    }
+    header h1 { font-size: 1.15rem; font-weight: 600; }
+    header .hint { font-size: .8rem; opacity: .9; font-weight: 400; }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+    .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 24px; }
+    .tab-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: .92rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all .15s;
+    }
+    .tab-btn:hover { border-color: var(--primary); }
+    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+    .card > h2 {
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card > h3 { font-size: .95rem; margin: 14px 0 8px; color: var(--primary-dark); }
+    label.field { display: block; margin-bottom: 14px; }
+    label.field > span { display: block; font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+    input[type=text], input[type=email], input[type=number], input[type=url], textarea, select {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: .92rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(33,150,243,.12); }
+    textarea { resize: vertical; min-height: 70px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 160px; }
+    .inline-check { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .inline-check input { width: auto; }
+    .inline-check span { font-size: .9rem; font-weight: 500; }
+    .item-box {
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--primary);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fafbfc;
+      position: relative;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+      transition: opacity .15s;
+    }
+    .btn:hover { opacity: .9; }
+    .btn-ghost { background: #eef1f5; color: var(--text); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 5px 10px; font-size: .78rem; }
+    .btn-add { background: var(--success); color: #fff; margin-top: 6px; }
+    .remove-x {
+      position: absolute; top: 8px; right: 8px;
+      background: var(--danger); color: #fff; border: none;
+      width: 24px; height: 24px; border-radius: 50%;
+      cursor: pointer; font-size: .9rem; line-height: 1;
+    }
+    .color-row { display: flex; align-items: center; gap: 8px; }
+    .color-row input[type=color] { width: 44px; height: 38px; padding: 2px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
+    .string-list-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+    .string-list-item textarea, .string-list-item input { flex: 1; }
+    .footer-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff; border-top: 1px solid var(--border);
+      padding: 14px 24px; display: flex; gap: 12px; align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,.06); z-index: 50; flex-wrap: wrap;
+    }
+    .footer-bar .spacer { flex: 1; }
+    .toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: var(--text); color: #fff; padding: 12px 22px; border-radius: 8px;
+      font-size: .9rem; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+    .help {
+      background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1;
+      padding: 14px 16px; border-radius: var(--radius); margin-bottom: 20px; font-size: .88rem;
+    }
+    .help code { background: rgba(13,71,161,.1); padding: 2px 6px; border-radius: 4px; font-size: .85em; }
+    .muted-note { font-size: .8rem; color: var(--muted); margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>⚙️ Painel Admin — Beach Tennis</h1>
+      <div class="hint">Edite o conteúdo e baixe os arquivos atualizados para publicar.</div>
+    </div>
+    <a href="index.html" class="btn btn-ghost" style="text-decoration:none">← Ver site</a>
+  </header>
+
+  <div class="container">
+    <div class="help">
+      <strong>Como publicar:</strong> edite os campos abaixo, clique em <strong>Baixar arquivos</strong>,
+      e substitua os arquivos baixados em <code>assets/js/</code> no repositório (commit + push).
+      O GitHub Pages atualiza o site automaticamente. Nada é salvo no servidor — tudo roda no seu navegador.
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="horarios">🗓️ Horários</button>
+      <button class="tab-btn" data-tab="portfolio">🏆 Portfólio / Sobre</button>
+      <button class="tab-btn" data-tab="contato">📞 Contato & Infos</button>
+    </div>
+
+    <div id="tab-horarios" class="tab-panel active"></div>
+    <div id="tab-portfolio" class="tab-panel"></div>
+    <div id="tab-contato" class="tab-panel"></div>
+  </div>
+
+  <div class="footer-bar">
+    <button class="btn" id="btn-download-horarios">⬇️ Baixar horarios-data.js</button>
+    <button class="btn" id="btn-download-portfolio">⬇️ Baixar portfolio-data.js</button>
+    <button class="btn btn-ghost" id="btn-download-all">⬇️ Baixar os 2</button>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" id="btn-preview">👁️ Pré-visualizar JSON</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Dados atuais (definem as globais portfolioData e horariosData) -->
+  <script src="assets/js/portfolio-data.js"></script>
+  <script src="assets/js/horarios-data.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    // ---- Estado: clones editáveis dos dados carregados ----
+    const H = structuredClone(horariosData);
+    const P = structuredClone(portfolioData);
+
+    // ---------- Helpers de DOM ----------
+    function el(tag, attrs, children) {
+      const node = document.createElement(tag);
+      if (attrs) {
+        for (const k in attrs) {
+          if (k === "class") node.className = attrs[k];
+          else if (k === "html") node.innerHTML = attrs[k];
+          else if (k.startsWith("on") && typeof attrs[k] === "function") node.addEventListener(k.slice(2), attrs[k]);
+          else if (attrs[k] !== undefined && attrs[k] !== null) node.setAttribute(k, attrs[k]);
+        }
+      }
+      (Array.isArray(children) ? children : (children != null ? [children] : [])).forEach(function (c) {
+        if (c == null) return;
+        node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+      });
+      return node;
+    }
+
+    // Campo de texto/textarea ligado a obj[key]
+    function field(label, obj, key, opts) {
+      opts = opts || {};
+      const id = "f_" + Math.random().toString(36).slice(2);
+      const input = el(opts.area ? "textarea" : "input", { id: id, type: opts.type || "text" });
+      input.value = obj[key] != null ? obj[key] : "";
+      input.addEventListener("input", function () {
+        obj[key] = opts.number ? (input.value === "" ? "" : Number(input.value)) : input.value;
+      });
+      if (opts.placeholder) input.placeholder = opts.placeholder;
+      return el("label", { class: "field" }, [el("span", null, label), input]);
+    }
+
+    function checkbox(label, obj, key) {
+      const input = el("input", { type: "checkbox" });
+      input.checked = !!obj[key];
+      input.addEventListener("change", function () { obj[key] = input.checked; });
+      return el("label", { class: "inline-check" }, [input, el("span", null, label)]);
+    }
+
+    // Editor de lista de strings (mutável). reRender redesenha o container pai.
+    function stringList(arr, opts) {
+      opts = opts || {};
+      const wrap = el("div");
+      function draw() {
+        wrap.innerHTML = "";
+        arr.forEach(function (val, i) {
+          const input = el(opts.area ? "textarea" : "input", { type: "text" });
+          input.value = val;
+          input.addEventListener("input", function () { arr[i] = input.value; });
+          if (opts.placeholder) input.placeholder = opts.placeholder;
+          const rm = el("button", { class: "btn btn-danger btn-sm", onclick: function () { arr.splice(i, 1); draw(); } }, "✕");
+          wrap.appendChild(el("div", { class: "string-list-item" }, [input, rm]));
+        });
+        wrap.appendChild(el("button", { class: "btn btn-add btn-sm", onclick: function () { arr.push(""); draw(); } }, "+ Adicionar"));
+      }
+      draw();
+      return wrap;
+    }
+
+    function toast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(function () { t.classList.remove("show"); }, 2200);
+    }
+
+    // ====================================================
+    // ABA HORÁRIOS
+    // ====================================================
+    function renderHorarios() {
+      const root = document.getElementById("tab-horarios");
+      root.innerHTML = "";
+
+      // --- Configuração da grade ---
+      const cfgCard = el("div", { class: "card" }, el("h2", null, "Configuração da grade"));
+      const grid = H.configGrid;
+      const diasObj = { v: grid.diasSemana.join(", ") };
+      const horObj = { v: grid.horarios.join(", ") };
+      const fDias = field("Dias da semana (separados por vírgula)", diasObj, "v");
+      fDias.querySelector("input,textarea").addEventListener("input", function () {
+        grid.diasSemana = diasObj.v.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      });
+      const fHor = field("Horários disponíveis na grade (ex: 08:00, 09:00)", horObj, "v");
+      fHor.querySelector("input,textarea").addEventListener("input", function () {
+        grid.horarios = horObj.v.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      });
+      cfgCard.appendChild(fDias);
+      cfgCard.appendChild(fHor);
+      root.appendChild(cfgCard);
+
+      // --- Categorias ---
+      const catCard = el("div", { class: "card" }, el("h2", null, "Categorias (cores e descrições)"));
+      const catWrap = el("div");
+      function drawCats() {
+        catWrap.innerHTML = "";
+        Object.keys(grid.categorias).forEach(function (chave) {
+          const cat = grid.categorias[chave];
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", title: "Remover", onclick: function () { delete grid.categorias[chave]; drawCats(); } }, "✕"));
+          box.appendChild(el("div", { class: "muted-note" }, "Chave interna: " + chave));
+          box.appendChild(field("Nome exibido", cat, "nome"));
+          // cor com seletor
+          const colorInput = el("input", { type: "color" });
+          colorInput.value = /^#[0-9a-f]{6}$/i.test(cat.cor) ? cat.cor : "#2196F3";
+          const colorText = el("input", { type: "text" });
+          colorText.value = cat.cor;
+          colorInput.addEventListener("input", function () { cat.cor = colorInput.value; colorText.value = colorInput.value; });
+          colorText.addEventListener("input", function () { cat.cor = colorText.value; if (/^#[0-9a-f]{6}$/i.test(colorText.value)) colorInput.value = colorText.value; });
+          box.appendChild(el("label", { class: "field" }, [el("span", null, "Cor"), el("div", { class: "color-row" }, [colorInput, colorText])]));
+          box.appendChild(field("Descrição", cat, "descricao", { area: true }));
+          catWrap.appendChild(box);
+        });
+      }
+      drawCats();
+      catCard.appendChild(catWrap);
+      catCard.appendChild(el("button", { class: "btn btn-add", onclick: function () {
+        const chave = prompt("Chave interna da nova categoria (sem espaços, ex: categoriaX):");
+        if (!chave) return;
+        if (grid.categorias[chave]) { alert("Já existe uma categoria com essa chave."); return; }
+        grid.categorias[chave] = { nome: chave, cor: "#9E9E9E", descricao: "" };
+        drawCats();
+      } }, "+ Adicionar categoria"));
+      root.appendChild(catCard);
+
+      // --- Aulas por dia ---
+      const aulasCard = el("div", { class: "card" }, el("h2", null, "Aulas por dia"));
+      const aulasWrap = el("div");
+      function catOptions(selected) {
+        return Object.keys(grid.categorias).map(function (chave) {
+          const o = el("option", { value: chave }, grid.categorias[chave].nome);
+          if (chave === selected) o.selected = true;
+          return o;
+        });
+      }
+      function drawAulas() {
+        aulasWrap.innerHTML = "";
+        H.horarios.forEach(function (diaObj, di) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", title: "Remover dia", onclick: function () { H.horarios.splice(di, 1); drawAulas(); } }, "✕"));
+          box.appendChild(field("Dia", diaObj, "dia"));
+          (diaObj.aulas || (diaObj.aulas = [])).forEach(function (aula, ai) {
+            const ab = el("div", { class: "item-box", style: "border-left-color:#FF9800" });
+            ab.appendChild(el("button", { class: "remove-x", title: "Remover aula", onclick: function () { diaObj.aulas.splice(ai, 1); drawAulas(); } }, "✕"));
+            ab.appendChild(field("Horário", aula, "horario", { placeholder: "ex: 18:00" }));
+            // categoria select
+            const sel = el("select", null, catOptions(aula.categoria));
+            sel.addEventListener("change", function () { aula.categoria = sel.value; });
+            ab.appendChild(el("label", { class: "field" }, [el("span", null, "Categoria"), sel]));
+            ab.appendChild(checkbox("Disponível para agendamento", aula, "disponivel"));
+            ab.appendChild(field("Observação", aula, "observacao", { placeholder: "ex: Turma completa" }));
+            box.appendChild(ab);
+          });
+          box.appendChild(el("button", { class: "btn btn-add btn-sm", onclick: function () {
+            const firstCat = Object.keys(grid.categorias)[0] || "";
+            diaObj.aulas.push({ horario: "", categoria: firstCat, disponivel: true, observacao: "" });
+            drawAulas();
+          } }, "+ Adicionar aula"));
+          aulasWrap.appendChild(box);
+        });
+      }
+      drawAulas();
+      aulasCard.appendChild(aulasWrap);
+      aulasCard.appendChild(el("button", { class: "btn btn-add", onclick: function () {
+        H.horarios.push({ dia: "", aulas: [] });
+        drawAulas();
+      } }, "+ Adicionar dia"));
+      root.appendChild(aulasCard);
+    }
+
+    // ====================================================
+    // ABA CONTATO & INFOS (horariosData.contato + informacoesAdicionais)
+    // ====================================================
+    function renderContato() {
+      const root = document.getElementById("tab-contato");
+      root.innerHTML = "";
+
+      const c = H.contato;
+      const card = el("div", { class: "card" }, el("h2", null, "Contato para agendamento"));
+      card.appendChild(field("WhatsApp (só números, com DDI/DDD — ex: 5546991155082)", c, "whatsapp"));
+      card.appendChild(field("Mensagem padrão", c, "mensagemPadrao", { area: true }));
+      card.appendChild(field("Instruções (subtítulo da tabela de horários)", c, "instrucoes", { area: true }));
+      root.appendChild(card);
+
+      const infoCard = el("div", { class: "card" }, el("h2", null, "Informações adicionais (lista na página de horários)"));
+      infoCard.appendChild(stringList(H.informacoesAdicionais, { area: false }));
+      root.appendChild(infoCard);
+    }
+
+    // ====================================================
+    // ABA PORTFÓLIO / SOBRE
+    // ====================================================
+    function renderPortfolio() {
+      const root = document.getElementById("tab-portfolio");
+      root.innerHTML = "";
+
+      // Informações básicas
+      const ib = P.informacoesBasicas;
+      const ibCard = el("div", { class: "card" }, el("h2", null, "Informações básicas"));
+      ibCard.appendChild(el("div", { class: "row" }, [field("Nome", ib, "nome"), field("Profissão", ib, "profissao")]));
+      ibCard.appendChild(el("div", { class: "row" }, [field("E-mail", ib, "email", { type: "email" }), field("Telefone", ib, "telefone")]));
+      ibCard.appendChild(field("Instagram", ib, "instagram"));
+      ibCard.appendChild(field("Foto de perfil (URL)", ib, "fotoPerfil", { type: "url" }));
+      ibCard.appendChild(field("Foto hero / banner (URL)", ib, "fotoHero", { type: "url" }));
+      ibCard.appendChild(field("Foto 'Sobre' (URL)", ib, "fotoSobre", { type: "url" }));
+      root.appendChild(ibCard);
+
+      // Resumo inicial
+      const ri = P.resumoInicial;
+      const riCard = el("div", { class: "card" }, el("h2", null, "Resumo inicial"));
+      riCard.appendChild(field("Título", ri, "titulo"));
+      riCard.appendChild(field("Conteúdo", ri, "conteudo", { area: true }));
+      root.appendChild(riCard);
+
+      // Objetivos do portfólio (lista)
+      const op = P.objetivosPortfolio;
+      const opCard = el("div", { class: "card" }, el("h2", null, "Objetivos do portfólio"));
+      opCard.appendChild(field("Título", op, "titulo"));
+      opCard.appendChild(el("h3", null, "Itens"));
+      opCard.appendChild(stringList(op.itens, { area: true }));
+      root.appendChild(opCard);
+
+      // Trajetória
+      const tr = P.trajetoria;
+      const trCard = el("div", { class: "card" }, el("h2", null, "Trajetória no Beach Tennis"));
+      trCard.appendChild(field("Título", tr, "titulo"));
+      trCard.appendChild(field("Conteúdo", tr, "conteudo", { area: true }));
+      root.appendChild(trCard);
+
+      // Atleta e Professor (parágrafos)
+      const ap = P.atletaProfessor;
+      const apCard = el("div", { class: "card" }, el("h2", null, "Atleta e Professor"));
+      apCard.appendChild(field("Título", ap, "titulo"));
+      apCard.appendChild(el("h3", null, "Parágrafos"));
+      apCard.appendChild(stringList(ap.paragrafos, { area: true }));
+      root.appendChild(apCard);
+
+      // Participações em torneios (anos -> eventos[], imagens[])
+      const pt = P.participacoesTorneios;
+      const ptCard = el("div", { class: "card" }, el("h2", null, "Participações em Eventos/Torneios"));
+      ptCard.appendChild(field("Título", pt, "titulo"));
+      const anosWrap = el("div");
+      function drawAnos() {
+        anosWrap.innerHTML = "";
+        pt.anos.forEach(function (a, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", onclick: function () { pt.anos.splice(i, 1); drawAnos(); } }, "✕"));
+          box.appendChild(field("Ano", a, "ano"));
+          box.appendChild(el("h3", null, "Eventos"));
+          box.appendChild(stringList(a.eventos, { area: true }));
+          box.appendChild(el("h3", null, "Imagens (URLs)"));
+          box.appendChild(stringList(a.imagens));
+          anosWrap.appendChild(box);
+        });
+      }
+      drawAnos();
+      ptCard.appendChild(anosWrap);
+      ptCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { pt.anos.push({ ano: "", eventos: [], imagens: [] }); drawAnos(); } }, "+ Adicionar ano"));
+      root.appendChild(ptCard);
+
+      // Cursos e treinamentos
+      const ct = P.cursosTreinamentos;
+      const ctCard = el("div", { class: "card" }, el("h2", null, "Cursos e Treinamentos"));
+      ctCard.appendChild(field("Título", ct, "titulo"));
+      const cursosWrap = el("div");
+      function drawCursos() {
+        cursosWrap.innerHTML = "";
+        ct.cursos.forEach(function (cu, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", onclick: function () { ct.cursos.splice(i, 1); drawCursos(); } }, "✕"));
+          box.appendChild(el("div", { class: "row" }, [field("Nome", cu, "nome"), field("Ano", cu, "ano")]));
+          box.appendChild(field("Instituição", cu, "instituicao"));
+          box.appendChild(field("Descrição", cu, "descricao", { area: true }));
+          cursosWrap.appendChild(box);
+        });
+      }
+      drawCursos();
+      ctCard.appendChild(cursosWrap);
+      ctCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { ct.cursos.push({ nome: "", instituicao: "", ano: "", descricao: "" }); drawCursos(); } }, "+ Adicionar curso"));
+      root.appendChild(ctCard);
+
+      // Objetivos futuros (curto/longo prazo)
+      const of = P.objetivosFuturos;
+      const ofCard = el("div", { class: "card" }, el("h2", null, "Objetivos Futuros"));
+      ofCard.appendChild(field("Título", of, "titulo"));
+      ofCard.appendChild(el("h3", null, "Curto prazo"));
+      ofCard.appendChild(field("Título (curto prazo)", of.curtoPrazo, "titulo"));
+      ofCard.appendChild(stringList(of.curtoPrazo.metas, { area: true }));
+      ofCard.appendChild(el("h3", null, "Longo prazo"));
+      ofCard.appendChild(field("Título (longo prazo)", of.longoPrazo, "titulo"));
+      ofCard.appendChild(stringList(of.longoPrazo.metas, { area: true }));
+      root.appendChild(ofCard);
+
+      // Parcerias estratégicas
+      const pe = P.parceriasEstrategicas;
+      const peCard = el("div", { class: "card" }, el("h2", null, "Parcerias Estratégicas"));
+      peCard.appendChild(field("Título", pe, "titulo"));
+      peCard.appendChild(field("Descrição", pe, "descricao", { area: true }));
+      peCard.appendChild(el("h3", null, "Benefícios"));
+      peCard.appendChild(stringList(pe.beneficios, { area: true }));
+      peCard.appendChild(field("Exemplos", pe, "exemplos", { area: true }));
+      root.appendChild(peCard);
+
+      // Estatísticas
+      const es = P.estatisticas;
+      const esCard = el("div", { class: "card" }, el("h2", null, "Estatísticas"));
+      esCard.appendChild(el("div", { class: "row" }, [
+        field("Alunos ativos", es, "alunosAtivos", { number: true, type: "number" }),
+        field("Posição no ranking", es, "posicaoRanking"),
+        field("Torneios vencidos", es, "torneiosVencidos", { number: true, type: "number" })
+      ]));
+      root.appendChild(esCard);
+
+      // Depoimentos
+      const depCard = el("div", { class: "card" }, el("h2", null, "Depoimentos"));
+      const depWrap = el("div");
+      function drawDep() {
+        depWrap.innerHTML = "";
+        P.depoimentos.forEach(function (d, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", onclick: function () { P.depoimentos.splice(i, 1); drawDep(); } }, "✕"));
+          box.appendChild(el("div", { class: "row" }, [field("Nome", d, "nome"), field("Categoria", d, "categoria")]));
+          box.appendChild(field("Texto", d, "texto", { area: true }));
+          box.appendChild(el("div", { class: "row" }, [field("Foto (URL)", d, "foto", { type: "url" }), field("Avaliação (1-5)", d, "avaliacao", { number: true, type: "number" })]));
+          depWrap.appendChild(box);
+        });
+      }
+      drawDep();
+      depCard.appendChild(depWrap);
+      depCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.depoimentos.push({ nome: "", categoria: "", texto: "", foto: "", avaliacao: 5 }); drawDep(); } }, "+ Adicionar depoimento"));
+      root.appendChild(depCard);
+
+      // Galeria
+      const galCard = el("div", { class: "card" }, el("h2", null, "Galeria de fotos"));
+      const galWrap = el("div");
+      function drawGal() {
+        galWrap.innerHTML = "";
+        P.galeria.forEach(function (g, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", onclick: function () { P.galeria.splice(i, 1); drawGal(); } }, "✕"));
+          box.appendChild(field("Título", g, "titulo"));
+          box.appendChild(field("URL da imagem", g, "url", { type: "url" }));
+          box.appendChild(field("Descrição", g, "descricao", { area: true }));
+          galWrap.appendChild(box);
+        });
+      }
+      drawGal();
+      galCard.appendChild(galWrap);
+      galCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.galeria.push({ titulo: "", url: "", descricao: "" }); drawGal(); } }, "+ Adicionar foto"));
+      root.appendChild(galCard);
+
+      // Serviços
+      const servCard = el("div", { class: "card" }, el("h2", null, "Serviços oferecidos"));
+      const servWrap = el("div");
+      function drawServ() {
+        servWrap.innerHTML = "";
+        P.servicos.forEach(function (s, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", onclick: function () { P.servicos.splice(i, 1); drawServ(); } }, "✕"));
+          box.appendChild(field("Título", s, "titulo"));
+          box.appendChild(field("Ícone (classe Font Awesome, ex: fas fa-table-tennis)", s, "icone"));
+          box.appendChild(field("Descrição", s, "descricao", { area: true }));
+          box.appendChild(el("h3", null, "Detalhes"));
+          box.appendChild(stringList(s.detalhes, { area: true }));
+          servWrap.appendChild(box);
+        });
+      }
+      drawServ();
+      servCard.appendChild(servWrap);
+      servCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.servicos.push({ titulo: "", icone: "", descricao: "", detalhes: [] }); drawServ(); } }, "+ Adicionar serviço"));
+      root.appendChild(servCard);
+    }
+
+    // ---------- Export ----------
+    function download(filename, content) {
+      const blob = new Blob([content], { type: "application/javascript;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = el("a", { href: url, download: filename });
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function buildHorariosFile() {
+      return "/**\n" +
+        " * Arquivo de configuração de horários de aula de Beach Tennis\n" +
+        " * Gerado pelo painel admin (admin.html).\n" +
+        " * Edite preferencialmente pelo admin para manter a estrutura.\n" +
+        " */\n\n" +
+        "const horariosData = " + JSON.stringify(H, null, 2) + ";\n";
+    }
+
+    function buildPortfolioFile() {
+      return "/**\n" +
+        " * Arquivo de dados do portfólio de Luiz Henrique\n" +
+        " * Gerado pelo painel admin (admin.html).\n" +
+        " * Edite preferencialmente pelo admin para manter a estrutura.\n" +
+        " */\n\n" +
+        "const portfolioData = " + JSON.stringify(P, null, 2) + ";\n";
+    }
+
+    document.getElementById("btn-download-horarios").addEventListener("click", function () {
+      download("horarios-data.js", buildHorariosFile()); toast("horarios-data.js baixado");
+    });
+    document.getElementById("btn-download-portfolio").addEventListener("click", function () {
+      download("portfolio-data.js", buildPortfolioFile()); toast("portfolio-data.js baixado");
+    });
+    document.getElementById("btn-download-all").addEventListener("click", function () {
+      download("horarios-data.js", buildHorariosFile());
+      download("portfolio-data.js", buildPortfolioFile());
+      toast("Os 2 arquivos foram baixados");
+    });
+    document.getElementById("btn-preview").addEventListener("click", function () {
+      const w = window.open("", "_blank");
+      w.document.write("<pre style='padding:16px;font:13px monospace;white-space:pre-wrap'>" +
+        (buildHorariosFile() + "\n\n/* ======================================== */\n\n" + buildPortfolioFile())
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+        "</pre>");
+      w.document.title = "Pré-visualização dos dados";
+    });
+
+    // ---------- Tabs ----------
+    document.querySelectorAll(".tab-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+        document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // ---------- Render inicial ----------
+    renderHorarios();
+    renderPortfolio();
+    renderContato();
+  })();
+  </script>
+</body>
+</html>

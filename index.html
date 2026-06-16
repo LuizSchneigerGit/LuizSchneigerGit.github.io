@@ -4,59 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Luiz Schneiger - Beach Tennis</title>
-  
+  <meta name="description" content="Luiz Schneiger — Professor e Atleta de Beach Tennis. Aulas, horários, loja e contato.">
+
   <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css">
-  
+  <link rel="stylesheet" href="assets/css/home.css">
+
   <!-- Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <!-- HOME LINKTREE -->
-  <section class="home-linktree">
-    <div class="profile">
-      <!-- Imagem de perfil - substitua pelo caminho da sua imagem -->
+  <main class="home-linktree">
+    <section class="profile">
       <img src="assets/img/profile.jpg" alt="Luiz Schneiger" class="profile__img">
       <h1 class="profile__name">Luiz Schneiger</h1>
       <p class="profile__description">Professor e Atleta de Beach Tennis</p>
-    </div>
-    
-    <div class="links">
-      <!-- Link para a página "Quem Sou Eu" -->
+    </section>
+
+    <nav class="links" aria-label="Links principais">
       <a href="quem-sou-eu.html" class="link-item link-item--primary">
-        Quem Sou Eu
+        <i class="fas fa-user"></i> Quem Sou Eu
       </a>
-      
-      <!-- Link para a página de horários -->
       <a href="horarios.html" class="link-item link-item--secondary">
-        Horários de Aula
+        <i class="fas fa-calendar-alt"></i> Horários de Aula
       </a>
-      
-      <!-- Link para futura implementação da loja -->
-      <a href="#" class="link-item link-item--tertiary">
-        Loja
+      <a href="loja.html" class="link-item link-item--tertiary">
+        <i class="fas fa-store"></i> Loja
       </a>
-    </div>
-    
+    </nav>
+
     <div class="social-icons">
-      <!-- Ícones de redes sociais - atualize os links conforme necessário -->
-      <a href="https://instagram.com/LuizSchneigerBT" class="social-icon" target="_blank">
+      <a href="https://instagram.com/LuizSchneigerBT" class="social-icon" target="_blank" rel="noopener" aria-label="Instagram">
         <i class="fab fa-instagram"></i>
       </a>
-      <a href="https://facebook.com/" class="social-icon" target="_blank">
-        <i class="fab fa-facebook"></i>
+      <a href="https://facebook.com/" class="social-icon" target="_blank" rel="noopener" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i>
       </a>
-      <a href="https://youtube.com/" class="social-icon" target="_blank">
+      <a href="https://youtube.com/" class="social-icon" target="_blank" rel="noopener" aria-label="YouTube">
         <i class="fab fa-youtube"></i>
       </a>
-      <a href="https://wa.me/5546991155082" class="social-icon" target="_blank">
+      <a href="https://wa.me/5546991155082" class="social-icon" target="_blank" rel="noopener" aria-label="WhatsApp">
         <i class="fab fa-whatsapp"></i>
       </a>
     </div>
-  </section>
+  </main>
+
+  <!-- Link discreto para o painel administrativo -->
+  <a href="admin.html" class="admin-link" title="Painel administrativo" aria-label="Painel administrativo">
+    <i class="fas fa-cog"></i>
+  </a>
 
   <!-- JavaScript -->
   <script src="assets/js/main.js"></script>

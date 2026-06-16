@@ -1,11 +1,11 @@
 /**
  * Regras de negócio da precificação de arbitragem (eventos estaduais).
+ * Baseado na TABELA ARBITRAGEM FPT 2026 (válida a partir de janeiro/2026).
  * Edite os valores aqui para atualizar a calculadora.
  */
 const arbitragemData = {
-  // Diária do Árbitro Geral por faixa de inscritos.
-  // Regra: usa a primeira faixa em que (inscritos <= ate). A última (ate: null)
-  // é o teto "acima de 501".
+  // Diária do Árbitro Geral por faixa de inscritos (eventos estaduais).
+  // Usa a primeira faixa em que (inscritos <= ate). A última (ate: null) é "acima de 501".
   faixasArbitroGeral: [
     { ate: 150,  valor: 300, label: "Estadual até 150 inscritos" },
     { ate: 250,  valor: 350, label: "Estadual 151 a 250 inscritos" },
@@ -15,18 +15,22 @@ const arbitragemData = {
     { ate: null, valor: 475, label: "Estadual acima de 501 inscritos" }
   ],
 
-  // Diária do Árbitro Auxiliar (fixa, independente de inscritos)
+  // Diária do Árbitro Auxiliar (fixa para estaduais)
   valorArbitroAuxiliar: 280,
+
+  // Regra: 1 auxiliar a cada N quadras (mínimo 1 — AG não trabalha sem auxiliar)
+  quadrasPorAuxiliar: 4,
 
   // Deslocamento: custo = (km * valorKm) + pedágios
   valorKm: 0.85,
 
-  // Refeição (variável opcional / futura) — R$ por refeição
-  valorRefeicao: 50,
+  // Alimentação (sugestão FPT: R$ 50/refeição). Padrão: 2 refeições por dia.
+  valorRefeicaoSugerido: 50,
+  refeicoesPorDiaPadrao: 2,
 
-  // Dados padrão do recibo
+  // Dados fixos do recibo
   arbitro: {
     nome: "Luiz Henrique",
-    pix: ""
+    pix: "083.263.949-47"
   }
 };

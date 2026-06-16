@@ -71,6 +71,12 @@
       <h2 class="section__title">Calculadora de Arbitragem</h2>
       <span class="section__subtitle">Eventos estaduais — calcule o valor e gere o recibo</span>
 
+      <div class="container arb__topo">
+        <a href="assets/docs/tabela-arbitragem-fpt-2026.pdf" target="_blank" rel="noopener" class="arb__pdf-btn">
+          <i class="fas fa-file-pdf"></i> Ver tabela oficial FPT 2026 (PDF)
+        </a>
+      </div>
+
       <div class="arb__container container grid">
         <!-- ==================== FORMULÁRIO ==================== -->
         <form class="arb__form" id="arb-form" autocomplete="off">
@@ -85,28 +91,41 @@
                 <label class="arb__label" for="arb-inscritos">Total de participantes (inscritos)</label>
                 <input class="arb__input" type="number" id="arb-inscritos" min="0" step="1" value="150">
               </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-data-inicio">Data de início</label>
+                <input class="arb__input" type="date" id="arb-data-inicio">
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-data-fim">Data de término</label>
+                <input class="arb__input" type="date" id="arb-data-fim">
+              </div>
             </div>
           </div>
 
           <div class="arb__grupo">
-            <h3 class="arb__grupo-titulo"><i class="fas fa-user-tie"></i> Funções e dias</h3>
-            <div class="arb__campos">
-              <div class="arb__campo">
-                <label class="arb__label" for="arb-dias-ag">Dias como Árbitro Geral</label>
-                <input class="arb__input" type="number" id="arb-dias-ag" min="0" step="1" value="1">
-              </div>
-              <div class="arb__campo">
-                <label class="arb__label" for="arb-dias-aux">Dias como Árbitro Auxiliar</label>
-                <input class="arb__input" type="number" id="arb-dias-aux" min="0" step="1" value="0">
-              </div>
-            </div>
+            <h3 class="arb__grupo-titulo"><i class="fas fa-table-cells-large"></i> Quadras por dia</h3>
+            <p class="arb__hint" style="margin-bottom:.75rem">1 auxiliar a cada 4 quadras (mínimo 1). Os dias vêm do período acima.</p>
+            <div id="arb-dias" class="arb__dias"><!-- dias dinâmicos --></div>
           </div>
 
           <div class="arb__grupo">
             <h3 class="arb__grupo-titulo"><i class="fas fa-car"></i> Deslocamento</h3>
             <div class="arb__campos">
               <div class="arb__campo">
-                <label class="arb__label" for="arb-km">Km rodados <span class="arb__hint">(× R$ 0,85)</span></label>
+                <label class="arb__label" for="arb-origem">Origem</label>
+                <input class="arb__input" type="text" id="arb-origem" placeholder="Ex: Pato Branco, PR">
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-destino">Destino</label>
+                <input class="arb__input" type="text" id="arb-destino" placeholder="Ex: Francisco Beltrão, PR">
+              </div>
+              <div class="arb__campo arb__campo--full">
+                <button type="button" class="arb__maps-btn" id="arb-maps">
+                  <i class="fas fa-map-location-dot"></i> Abrir rota no Google Maps (ver km)
+                </button>
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-km">Km (só ida) <span class="arb__hint">(× R$ 0,85)</span></label>
                 <input class="arb__input" type="number" id="arb-km" min="0" step="0.1" value="0">
               </div>
               <div class="arb__campo">
@@ -114,23 +133,37 @@
                 <input class="arb__input" type="number" id="arb-pedagios" min="0" step="0.01" value="0">
               </div>
               <div class="arb__campo arb__campo--full">
-                <label class="arb__label" for="arb-refeicoes">Refeições <span class="arb__hint">(opcional — R$ 50 cada)</span></label>
-                <input class="arb__input" type="number" id="arb-refeicoes" min="0" step="1" value="0">
+                <label class="arb__check">
+                  <input type="checkbox" id="arb-ida-volta" checked>
+                  <span>Ida e volta (dobra a distância)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="arb__grupo">
+            <h3 class="arb__grupo-titulo"><i class="fas fa-utensils"></i> Alimentação</h3>
+            <label class="arb__check">
+              <input type="checkbox" id="arb-incluir-alimentacao" checked>
+              <span>Incluir alimentação no total</span>
+            </label>
+            <div class="arb__campos" id="arb-alimentacao-campos" style="margin-top:1rem">
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-refeicoes-dia">Refeições por dia</label>
+                <input class="arb__input" type="number" id="arb-refeicoes-dia" min="0" step="1" value="2">
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-valor-refeicao">Valor por refeição (R$) <span class="arb__hint">(sugestão FPT: 50)</span></label>
+                <input class="arb__input" type="number" id="arb-valor-refeicao" min="0" step="0.01" value="50">
               </div>
             </div>
           </div>
 
           <div class="arb__grupo">
             <h3 class="arb__grupo-titulo"><i class="fas fa-receipt"></i> Dados do recibo</h3>
-            <div class="arb__campos">
-              <div class="arb__campo">
-                <label class="arb__label" for="arb-arbitro">Nome do árbitro</label>
-                <input class="arb__input" type="text" id="arb-arbitro" placeholder="Seu nome">
-              </div>
-              <div class="arb__campo">
-                <label class="arb__label" for="arb-pix">Chave PIX</label>
-                <input class="arb__input" type="text" id="arb-pix" placeholder="Sua chave PIX">
-              </div>
+            <div class="arb__recibo-fixo">
+              <span><strong>Árbitro:</strong> <span id="arb-arbitro-nome">Luiz Henrique</span></span>
+              <span><strong>PIX:</strong> <span id="arb-arbitro-pix">083.263.949-47</span></span>
             </div>
           </div>
         </form>

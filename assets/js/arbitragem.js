@@ -1,20 +1,21 @@
 /**
- * Calculadora de Arbitragem.
- * As funções de cálculo são puras e expostas em ArbitragemCalc (testáveis no Node).
+ * Calculadora de Arbitragem (FPT 2026 — eventos estaduais).
+ * Funções de cálculo são puras e expostas em ArbitragemCalc (testáveis no Node).
  * A ligação com o DOM só roda no navegador.
  */
 (function (global) {
   "use strict";
 
-  // ---------- Formatação de moeda (pt-BR, determinística) ----------
+  // ---------- Formatação ----------
   function money(v) {
-    var s = (Number(v) || 0).toFixed(2);          // "1234.50"
+    var s = (Number(v) || 0).toFixed(2);
     var parts = s.split(".");
-    var inteiro = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "."); // "1.234"
+    var inteiro = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return "R$ " + inteiro + "," + parts[1];
   }
+  function km1(v) { return String(Number(v) || 0).replace(".", ","); }
 
-  // ---------- Regras de negócio (puras) ----------
+  // ---------- Regras (puras) ----------
   function faixaArbitroGeral(inscritos, faixas) {
     for (var i = 0; i < faixas.length; i++) {
       var f = faixas[i];
@@ -23,101 +24,202 @@
     return faixas[faixas.length - 1];
   }
 
+  // 1 auxiliar a cada N quadras, mínimo 1 (AG não pode trabalhar sem auxiliar).
+  function auxiliaresPorQuadras(quadras, porAux) {
+    var q = Math.max(0, Math.floor(Number(quadras) || 0));
+    var n = Math.ceil(q / (porAux || 4));
+    return Math.max(1, n);
+  }
+
   function calcular(inp, data) {
     var faixa = faixaArbitroGeral(inp.inscritos, data.faixasArbitroGeral);
     var diariaAG = faixa.valor;
-    var totalAG = diariaAG * inp.diasAG;
-    var totalAux = data.valorArbitroAuxiliar * inp.diasAux;
-    var custoDeslocamento = inp.km * data.valorKm + inp.pedagios;
-    var custoRefeicoes = (inp.refeicoes || 0) * data.valorRefeicao;
-    var totalFinal = totalAG + totalAux + custoDeslocamento + custoRefeicoes;
+
+    var dias = inp.dias || [];
+    var numDias = dias.length;
+    var totalAG = diariaAG * numDias;
+
+    var auxPorDia = dias.map(function (d) {
+      return auxiliaresPorQuadras(d.quadras, data.quadrasPorAuxiliar);
+    });
+    var totalAuxDiarias = auxPorDia.reduce(function (a, b) { return a + b; }, 0);
+    var totalAux = data.valorArbitroAuxiliar * totalAuxDiarias;
+
+    var kmEf = (Number(inp.km) || 0) * (inp.idaEVolta ? 2 : 1);
+    var deslocamento = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
+
+    var alimentacao = 0;
+    if (inp.incluirAlimentacao) {
+      alimentacao = (Number(inp.refeicoesPorDia) || 0) * (Number(inp.valorRefeicao) || 0) * numDias;
+    }
+
+    var totalFinal = totalAG + totalAux + deslocamento + alimentacao;
+
     return {
-      faixa: faixa,
-      diariaAG: diariaAG,
-      totalAG: totalAG,
-      totalAux: totalAux,
-      custoDeslocamento: custoDeslocamento,
-      custoRefeicoes: custoRefeicoes,
-      totalFinal: totalFinal
+      faixa: faixa, diariaAG: diariaAG, numDias: numDias, totalAG: totalAG,
+      auxPorDia: auxPorDia, totalAuxDiarias: totalAuxDiarias, totalAux: totalAux,
+      kmEf: kmEf, deslocamento: deslocamento, alimentacao: alimentacao, totalFinal: totalFinal
     };
   }
 
   function gerarRecibo(inp, c, data) {
     var L = [];
     L.push(inp.arena || "[Nome da Arena]");
-    L.push("Arbitragem");
+    var periodo = inp.periodoLabel ? (" — " + inp.periodoLabel) : "";
+    L.push("Arbitragem" + periodo + " (" + c.numDias + (c.numDias === 1 ? " dia" : " dias") + ")");
     L.push("Total de Participantes: " + inp.inscritos);
-    L.push(c.faixa.label + " R$ " + c.diariaAG);
-    L.push("Arbitragem Geral: " + c.diariaAG + " x " + inp.diasAG + " = " + money(c.totalAG));
-    L.push("Arbitragem Auxiliar " + inp.diasAux + " dias = " + money(c.totalAux));
-    L.push("Deslocamento: " + inp.km + " km e Pedágios = " + money(c.custoDeslocamento));
-    if (c.custoRefeicoes > 0) {
-      L.push("Refeições: " + inp.refeicoes + " x R$ " + data.valorRefeicao + " = " + money(c.custoRefeicoes));
+    L.push(c.faixa.label + ": " + money(c.diariaAG) + "/dia");
+    L.push("Arbitragem Geral: " + c.diariaAG + " x " + c.numDias + " dia(s) = " + money(c.totalAG));
+    L.push("Arbitragem Auxiliar: " + data.valorArbitroAuxiliar + " x " + c.totalAuxDiarias + " diária(s) = " + money(c.totalAux));
+    if (inp.dias && inp.dias.length) {
+      var det = inp.dias.map(function (d, i) {
+        return (d.label || ("Dia " + (i + 1))) + ": " + c.auxPorDia[i] + " aux/" + (Number(d.quadras) || 0) + "q";
+      }).join("  |  ");
+      L.push("  (" + det + ")");
+    }
+    L.push("Deslocamento: " + (Number(inp.km) || 0) + " km" + (inp.idaEVolta ? " (ida e volta)" : "") +
+      " x " + km1(data.valorKm) + " + pedágios " + money(inp.pedagios || 0) + " = " + money(c.deslocamento));
+    if (c.alimentacao > 0) {
+      L.push("Alimentação: " + inp.refeicoesPorDia + " ref/dia x " + money(inp.valorRefeicao) +
+        " x " + c.numDias + " dia(s) = " + money(c.alimentacao));
     }
     L.push("Total Arbitragem: " + money(c.totalFinal));
-    L.push(inp.arbitro || "[Nome do Árbitro]");
-    L.push("Pix: " + (inp.pix || "[Chave PIX]"));
+    L.push(data.arbitro.nome);
+    L.push("Pix: " + data.arbitro.pix);
     return L.join("\n");
   }
 
   global.ArbitragemCalc = {
     money: money,
     faixaArbitroGeral: faixaArbitroGeral,
+    auxiliaresPorQuadras: auxiliaresPorQuadras,
     calcular: calcular,
     gerarRecibo: gerarRecibo
   };
 
-  // ---------- Ligação com o DOM (só no navegador) ----------
+  // ---------- DOM (só no navegador) ----------
   if (typeof document === "undefined") return;
 
   document.addEventListener("DOMContentLoaded", function () {
     if (typeof arbitragemData === "undefined") return;
     var data = arbitragemData;
-
     var $ = function (id) { return document.getElementById(id); };
     var form = $("arb-form");
     if (!form) return;
 
-    // Preenche o nome do árbitro padrão
-    if (data.arbitro && data.arbitro.nome && !$("arb-arbitro").value) {
-      $("arb-arbitro").value = data.arbitro.nome;
-    }
-    if (data.arbitro && data.arbitro.pix && !$("arb-pix").value) {
-      $("arb-pix").value = data.arbitro.pix;
-    }
+    // Preenche dados do recibo fixos (exibição)
+    if ($("arb-arbitro-nome")) $("arb-arbitro-nome").textContent = data.arbitro.nome;
+    if ($("arb-arbitro-pix")) $("arb-arbitro-pix").textContent = data.arbitro.pix;
+
+    // Defaults de alimentação
+    if ($("arb-refeicoes-dia") && !$("arb-refeicoes-dia").value) $("arb-refeicoes-dia").value = data.refeicoesPorDiaPadrao;
+    if ($("arb-valor-refeicao") && !$("arb-valor-refeicao").value) $("arb-valor-refeicao").value = data.valorRefeicaoSugerido;
+
+    // Estado das quadras por data (preserva valores ao mudar o período)
+    var quadrasPorData = {};
 
     function num(id) {
-      var v = parseFloat(($(id).value || "").replace(",", "."));
+      var el = $(id); if (!el) return 0;
+      var v = parseFloat((el.value || "").replace(",", "."));
       return isNaN(v) || v < 0 ? 0 : v;
     }
     function intNum(id) {
-      var v = parseInt($(id).value, 10);
+      var el = $(id); if (!el) return 0;
+      var v = parseInt(el.value, 10);
       return isNaN(v) || v < 0 ? 0 : v;
+    }
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    function labelData(d) { return pad(d.getDate()) + "/" + pad(d.getMonth() + 1); }
+    function isoData(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+
+    function listaDias() {
+      var ini = $("arb-data-inicio").value;
+      var fim = $("arb-data-fim").value;
+      if (!ini || !fim) return [];
+      var d0 = new Date(ini + "T00:00:00");
+      var d1 = new Date(fim + "T00:00:00");
+      if (isNaN(d0.getTime()) || isNaN(d1.getTime()) || d1 < d0) return [];
+      var dias = [], cur = new Date(d0), guard = 0;
+      while (cur <= d1 && guard < 90) { dias.push(new Date(cur)); cur.setDate(cur.getDate() + 1); guard++; }
+      return dias;
+    }
+
+    // (Re)constrói os campos de quadras por dia
+    function montarDias() {
+      var cont = $("arb-dias");
+      cont.innerHTML = "";
+      var dias = listaDias();
+      if (dias.length === 0) {
+        cont.innerHTML = '<p class="arb__dias-vazio">Informe as datas de início e fim para listar os dias.</p>';
+        return;
+      }
+      dias.forEach(function (d) {
+        var iso = isoData(d);
+        var valor = (iso in quadrasPorData) ? quadrasPorData[iso] : 4;
+        quadrasPorData[iso] = valor;
+
+        var row = document.createElement("div");
+        row.className = "arb__dia";
+
+        var lbl = document.createElement("span");
+        lbl.className = "arb__dia-data";
+        lbl.textContent = labelData(d);
+
+        var grp = document.createElement("div");
+        grp.className = "arb__dia-campo";
+        var cap = document.createElement("label");
+        cap.className = "arb__dia-cap";
+        cap.textContent = "Quadras";
+        var inp = document.createElement("input");
+        inp.type = "number"; inp.min = "0"; inp.step = "1";
+        inp.className = "arb__input arb__dia-quadras";
+        inp.value = valor;
+        var aux = document.createElement("span");
+        aux.className = "arb__dia-aux";
+        function refresh() {
+          var q = parseInt(inp.value, 10); if (isNaN(q) || q < 0) q = 0;
+          quadrasPorData[iso] = q;
+          var n = ArbitragemCalc.auxiliaresPorQuadras(q, data.quadrasPorAuxiliar);
+          aux.textContent = n + (n === 1 ? " auxiliar" : " auxiliares");
+        }
+        inp.addEventListener("input", function () { refresh(); atualizar(); });
+        refresh();
+
+        grp.appendChild(cap);
+        grp.appendChild(inp);
+        row.appendChild(lbl);
+        row.appendChild(grp);
+        row.appendChild(aux);
+        cont.appendChild(row);
+      });
     }
 
     function lerEntrada() {
+      var dias = listaDias().map(function (d) {
+        var iso = isoData(d);
+        return { label: labelData(d), quadras: (iso in quadrasPorData) ? quadrasPorData[iso] : 4 };
+      });
+      var periodoLabel = dias.length ? (dias[0].label + " a " + dias[dias.length - 1].label) : "";
       return {
         arena: $("arb-arena").value.trim(),
         inscritos: intNum("arb-inscritos"),
-        diasAG: intNum("arb-dias-ag"),
-        diasAux: intNum("arb-dias-aux"),
+        dias: dias,
+        periodoLabel: periodoLabel,
         km: num("arb-km"),
+        idaEVolta: $("arb-ida-volta").checked,
         pedagios: num("arb-pedagios"),
-        refeicoes: intNum("arb-refeicoes"),
-        arbitro: $("arb-arbitro").value.trim(),
-        pix: $("arb-pix").value.trim()
+        incluirAlimentacao: $("arb-incluir-alimentacao").checked,
+        refeicoesPorDia: intNum("arb-refeicoes-dia"),
+        valorRefeicao: num("arb-valor-refeicao")
       };
     }
 
-    function linhaResumo(rotulo, valor, destaque) {
+    function linha(rotulo, valor, total) {
       var div = document.createElement("div");
-      div.className = "arb__linha" + (destaque ? " arb__linha--total" : "");
-      var r = document.createElement("span");
-      r.textContent = rotulo;
-      var v = document.createElement("strong");
-      v.textContent = valor;
-      div.appendChild(r);
-      div.appendChild(v);
+      div.className = "arb__linha" + (total ? " arb__linha--total" : "");
+      var r = document.createElement("span"); r.textContent = rotulo;
+      var v = document.createElement("strong"); v.textContent = valor;
+      div.appendChild(r); div.appendChild(v);
       return div;
     }
 
@@ -125,25 +227,44 @@
       var inp = lerEntrada();
       var c = ArbitragemCalc.calcular(inp, data);
 
-      // Painel de resumo
+      // Mostra/oculta campos de alimentação
+      var alimBox = $("arb-alimentacao-campos");
+      if (alimBox) alimBox.style.display = inp.incluirAlimentacao ? "" : "none";
+
       var resumo = $("arb-resumo");
       resumo.innerHTML = "";
-      resumo.appendChild(linhaResumo("Diária do Árbitro Geral", c.faixa.label, false));
-      resumo.appendChild(linhaResumo("Valor da diária (AG)", ArbitragemCalc.money(c.diariaAG), false));
-      resumo.appendChild(linhaResumo("Total Árbitro Geral (" + inp.diasAG + " dia(s))", ArbitragemCalc.money(c.totalAG), false));
-      resumo.appendChild(linhaResumo("Total Árbitro Auxiliar (" + inp.diasAux + " dia(s))", ArbitragemCalc.money(c.totalAux), false));
-      resumo.appendChild(linhaResumo("Deslocamento (" + inp.km + " km + pedágios)", ArbitragemCalc.money(c.custoDeslocamento), false));
-      if (c.custoRefeicoes > 0) {
-        resumo.appendChild(linhaResumo("Refeições (" + inp.refeicoes + ")", ArbitragemCalc.money(c.custoRefeicoes), false));
+      if (inp.dias.length === 0) {
+        resumo.appendChild(linha("Período", "Informe as datas do torneio", false));
+      } else {
+        resumo.appendChild(linha("Período", inp.periodoLabel + " (" + c.numDias + " dia(s))", false));
+        resumo.appendChild(linha(c.faixa.label, ArbitragemCalc.money(c.diariaAG) + "/dia", false));
+        resumo.appendChild(linha("Árbitro Geral (" + c.numDias + " dia(s))", ArbitragemCalc.money(c.totalAG), false));
+        resumo.appendChild(linha("Auxiliares (" + c.totalAuxDiarias + " diária(s))", ArbitragemCalc.money(c.totalAux), false));
+        resumo.appendChild(linha("Deslocamento" + (inp.idaEVolta ? " (ida e volta)" : ""), ArbitragemCalc.money(c.deslocamento), false));
+        if (inp.incluirAlimentacao) {
+          resumo.appendChild(linha("Alimentação (" + inp.refeicoesPorDia + " ref/dia)", ArbitragemCalc.money(c.alimentacao), false));
+        }
+        resumo.appendChild(linha("Total Final", ArbitragemCalc.money(c.totalFinal), true));
       }
-      resumo.appendChild(linhaResumo("Total Final", ArbitragemCalc.money(c.totalFinal), true));
 
-      // Recibo
       $("arb-recibo").value = ArbitragemCalc.gerarRecibo(inp, c, data);
     }
 
+    // Recalcula quando as datas mudam (reconstrói os dias) e em qualquer input
+    $("arb-data-inicio").addEventListener("change", function () { montarDias(); atualizar(); });
+    $("arb-data-fim").addEventListener("change", function () { montarDias(); atualizar(); });
     form.addEventListener("input", atualizar);
     form.addEventListener("submit", function (e) { e.preventDefault(); atualizar(); });
+
+    // Botão Google Maps (abre a rota para você ver os km)
+    $("arb-maps").addEventListener("click", function () {
+      var origem = encodeURIComponent($("arb-origem").value.trim());
+      var destino = encodeURIComponent($("arb-destino").value.trim());
+      var url = "https://www.google.com/maps/dir/?api=1";
+      if (origem) url += "&origin=" + origem;
+      if (destino) url += "&destination=" + destino;
+      window.open(url, "_blank", "noopener");
+    });
 
     // Copiar recibo
     $("arb-copiar").addEventListener("click", function () {
@@ -154,27 +275,25 @@
         btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
         setTimeout(function () { btn.innerHTML = antigo; }, 1500);
       }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(ok, fallback);
-      } else {
-        fallback();
-      }
       function fallback() {
         var ta = $("arb-recibo");
-        ta.removeAttribute("readonly");
-        ta.select();
+        ta.removeAttribute("readonly"); ta.select();
         try { document.execCommand("copy"); ok(); } catch (e) {}
         ta.setAttribute("readonly", "readonly");
-        window.getSelection().removeAllRanges();
+        if (window.getSelection) window.getSelection().removeAllRanges();
       }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(ok, fallback);
+      } else { fallback(); }
     });
 
-    // Enviar no WhatsApp (escolhe o contato no app)
+    // Enviar no WhatsApp
     $("arb-whatsapp").addEventListener("click", function () {
       var txt = encodeURIComponent($("arb-recibo").value);
       window.open("https://wa.me/?text=" + txt, "_blank", "noopener");
     });
 
+    montarDias();
     atualizar();
   });
 })(typeof window !== "undefined" ? window : globalThis);

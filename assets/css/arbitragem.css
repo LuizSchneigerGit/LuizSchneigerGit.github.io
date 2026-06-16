@@ -168,6 +168,88 @@
   margin-top: 1.5rem;
 }
 
+/* ---- Botão PDF (tabela oficial) ---- */
+.arb__topo { text-align: center; margin-bottom: 1.75rem; }
+.arb__pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: #c0392b;
+  color: #fff;
+  font-size: var(--small-font-size);
+  font-weight: var(--font-semi-bold);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+.arb__pdf-btn:hover { filter: brightness(0.95); transform: translateY(-2px); }
+
+/* ---- Quadras por dia ---- */
+.arb__dias { display: flex; flex-direction: column; gap: 0.6rem; }
+.arb__dias-vazio { font-size: var(--small-font-size); color: var(--text-color-light); }
+
+.arb__dia {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--container-color-alt);
+  border-radius: 0.5rem;
+}
+.arb__dia-data { font-weight: var(--font-semi-bold); color: var(--first-color); }
+.arb__dia-campo { display: flex; align-items: center; gap: 0.5rem; }
+.arb__dia-cap { font-size: var(--smaller-font-size); color: var(--text-color-light); }
+.arb__dia-quadras { width: 5rem; padding: 0.45rem 0.5rem; }
+.arb__dia-aux {
+  font-size: var(--small-font-size);
+  font-weight: var(--font-medium);
+  color: var(--title-color);
+  white-space: nowrap;
+}
+
+/* ---- Checkbox ---- */
+.arb__check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: var(--small-font-size);
+  color: var(--title-color);
+}
+.arb__check input { width: 1.1rem; height: 1.1rem; accent-color: var(--first-color); cursor: pointer; }
+
+/* ---- Botão Google Maps ---- */
+.arb__maps-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--first-color);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--first-color);
+  font-family: var(--body-font);
+  font-size: var(--small-font-size);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.arb__maps-btn:hover { background-color: var(--first-color); color: #fff; }
+
+/* ---- Recibo fixo ---- */
+.arb__recibo-fixo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  padding: 0.85rem 1rem;
+  background-color: var(--container-color-alt);
+  border-radius: 0.5rem;
+  font-size: var(--small-font-size);
+  color: var(--text-color);
+}
+.arb__recibo-fixo strong { color: var(--title-color); }
+
 /* ---- Responsividade ---- */
 @media screen and (min-width: 768px) {
   .arb__container {

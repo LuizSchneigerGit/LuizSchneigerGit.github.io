@@ -45,8 +45,10 @@
     var totalAuxDiarias = auxPorDia.reduce(function (a, b) { return a + b; }, 0);
     var totalAux = data.valorArbitroAuxiliar * totalAuxDiarias;
 
+    // Deslocamento por dia (o trajeto se repete a cada dia do torneio) × nº de dias
     var kmEf = (Number(inp.km) || 0) * (inp.idaEVolta ? 2 : 1);
-    var deslocamento = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
+    var deslocamentoPorDia = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
+    var deslocamento = deslocamentoPorDia * numDias;
 
     var alimentacao = 0;
     if (inp.incluirAlimentacao) {
@@ -58,7 +60,8 @@
     return {
       faixa: faixa, diariaAG: diariaAG, numDias: numDias, totalAG: totalAG,
       auxPorDia: auxPorDia, totalAuxDiarias: totalAuxDiarias, totalAux: totalAux,
-      kmEf: kmEf, deslocamento: deslocamento, alimentacao: alimentacao, totalFinal: totalFinal
+      kmEf: kmEf, deslocamentoPorDia: deslocamentoPorDia, deslocamento: deslocamento,
+      alimentacao: alimentacao, totalFinal: totalFinal
     };
   }
 
@@ -77,8 +80,9 @@
       }).join("  |  ");
       L.push("  (" + det + ")");
     }
-    L.push("Deslocamento: " + (Number(inp.km) || 0) + " km" + (inp.idaEVolta ? " (ida e volta)" : "") +
-      " x " + km1(data.valorKm) + " + pedágios " + money(inp.pedagios || 0) + " = " + money(c.deslocamento));
+    L.push("Deslocamento: " + money(c.deslocamentoPorDia) + "/dia x " + c.numDias + " dia(s) = " + money(c.deslocamento));
+    L.push("  (" + (Number(inp.km) || 0) + " km" + (inp.idaEVolta ? " ida e volta" : "") +
+      " x " + km1(data.valorKm) + " + pedágios/dia " + money(inp.pedagios || 0) + ")");
     if (c.alimentacao > 0) {
       L.push("Alimentação: " + inp.refeicoesPorDia + " ref/dia x " + money(inp.valorRefeicao) +
         " x " + c.numDias + " dia(s) = " + money(c.alimentacao));
@@ -111,8 +115,7 @@
     if ($("arb-arbitro-nome")) $("arb-arbitro-nome").textContent = data.arbitro.nome;
     if ($("arb-arbitro-pix")) $("arb-arbitro-pix").textContent = data.arbitro.pix;
 
-    // Defaults de alimentação
-    if ($("arb-refeicoes-dia") && !$("arb-refeicoes-dia").value) $("arb-refeicoes-dia").value = data.refeicoesPorDiaPadrao;
+    // Default do valor da refeição (quantidade é fixa = data.refeicoesPorDiaPadrao)
     if ($("arb-valor-refeicao") && !$("arb-valor-refeicao").value) $("arb-valor-refeicao").value = data.valorRefeicaoSugerido;
 
     // Estado das quadras por data (preserva valores ao mudar o período)
@@ -209,7 +212,7 @@
         idaEVolta: $("arb-ida-volta").checked,
         pedagios: num("arb-pedagios"),
         incluirAlimentacao: $("arb-incluir-alimentacao").checked,
-        refeicoesPorDia: intNum("arb-refeicoes-dia"),
+        refeicoesPorDia: data.refeicoesPorDiaPadrao, // fixo (2)
         valorRefeicao: num("arb-valor-refeicao")
       };
     }
@@ -240,9 +243,9 @@
         resumo.appendChild(linha(c.faixa.label, ArbitragemCalc.money(c.diariaAG) + "/dia", false));
         resumo.appendChild(linha("Árbitro Geral (" + c.numDias + " dia(s))", ArbitragemCalc.money(c.totalAG), false));
         resumo.appendChild(linha("Auxiliares (" + c.totalAuxDiarias + " diária(s))", ArbitragemCalc.money(c.totalAux), false));
-        resumo.appendChild(linha("Deslocamento" + (inp.idaEVolta ? " (ida e volta)" : ""), ArbitragemCalc.money(c.deslocamento), false));
+        resumo.appendChild(linha("Deslocamento (" + ArbitragemCalc.money(c.deslocamentoPorDia) + "/dia × " + c.numDias + ")", ArbitragemCalc.money(c.deslocamento), false));
         if (inp.incluirAlimentacao) {
-          resumo.appendChild(linha("Alimentação (" + inp.refeicoesPorDia + " ref/dia)", ArbitragemCalc.money(c.alimentacao), false));
+          resumo.appendChild(linha("Alimentação (" + inp.refeicoesPorDia + " ref/dia × " + c.numDias + ")", ArbitragemCalc.money(c.alimentacao), false));
         }
         resumo.appendChild(linha("Total Final", ArbitragemCalc.money(c.totalFinal), true));
       }
@@ -264,27 +267,6 @@
       if (origem) url += "&origin=" + origem;
       if (destino) url += "&destination=" + destino;
       window.open(url, "_blank", "noopener");
-    });
-
-    // Copiar recibo
-    $("arb-copiar").addEventListener("click", function () {
-      var txt = $("arb-recibo").value;
-      var btn = $("arb-copiar");
-      function ok() {
-        var antigo = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-        setTimeout(function () { btn.innerHTML = antigo; }, 1500);
-      }
-      function fallback() {
-        var ta = $("arb-recibo");
-        ta.removeAttribute("readonly"); ta.select();
-        try { document.execCommand("copy"); ok(); } catch (e) {}
-        ta.setAttribute("readonly", "readonly");
-        if (window.getSelection) window.getSelection().removeAllRanges();
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(ok, fallback);
-      } else { fallback(); }
     });
 
     // Enviar no WhatsApp

@@ -110,6 +110,7 @@
 
           <div class="arb__grupo">
             <h3 class="arb__grupo-titulo"><i class="fas fa-car"></i> Deslocamento</h3>
+            <p class="arb__hint" style="margin-bottom:.75rem">O deslocamento é calculado por dia e multiplicado pelo número de dias do torneio.</p>
             <div class="arb__campos">
               <div class="arb__campo">
                 <label class="arb__label" for="arb-origem">Origem</label>
@@ -129,7 +130,7 @@
                 <input class="arb__input" type="number" id="arb-km" min="0" step="0.1" value="0">
               </div>
               <div class="arb__campo">
-                <label class="arb__label" for="arb-pedagios">Pedágios (R$)</label>
+                <label class="arb__label" for="arb-pedagios">Pedágios por dia (R$)</label>
                 <input class="arb__input" type="number" id="arb-pedagios" min="0" step="0.01" value="0">
               </div>
               <div class="arb__campo arb__campo--full">
@@ -145,14 +146,10 @@
             <h3 class="arb__grupo-titulo"><i class="fas fa-utensils"></i> Alimentação</h3>
             <label class="arb__check">
               <input type="checkbox" id="arb-incluir-alimentacao" checked>
-              <span>Incluir alimentação no total</span>
+              <span>Incluir alimentação no total (2 refeições por dia)</span>
             </label>
             <div class="arb__campos" id="arb-alimentacao-campos" style="margin-top:1rem">
-              <div class="arb__campo">
-                <label class="arb__label" for="arb-refeicoes-dia">Refeições por dia</label>
-                <input class="arb__input" type="number" id="arb-refeicoes-dia" min="0" step="1" value="2">
-              </div>
-              <div class="arb__campo">
+              <div class="arb__campo arb__campo--full">
                 <label class="arb__label" for="arb-valor-refeicao">Valor por refeição (R$) <span class="arb__hint">(sugestão FPT: 50)</span></label>
                 <input class="arb__input" type="number" id="arb-valor-refeicao" min="0" step="0.01" value="50">
               </div>
@@ -173,12 +170,9 @@
           <div class="arb__resumo" id="arb-resumo"><!-- resumo dinâmico --></div>
 
           <div class="arb__recibo-box">
-            <h3 class="arb__recibo-titulo"><i class="fas fa-clipboard"></i> Resumo para cópia (WhatsApp/E-mail)</h3>
+            <h3 class="arb__recibo-titulo"><i class="fas fa-clipboard"></i> Resumo do recibo</h3>
             <textarea class="arb__recibo" id="arb-recibo" readonly spellcheck="false"></textarea>
             <div class="arb__acoes">
-              <button type="button" class="arb__btn arb__btn--copiar" id="arb-copiar">
-                <i class="fas fa-copy"></i> Copiar
-              </button>
               <button type="button" class="arb__btn arb__btn--whatsapp" id="arb-whatsapp">
                 <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
               </button>

@@ -173,27 +173,31 @@
     <div class="tabs">
       <button class="tab-btn active" data-tab="horarios">🗓️ Horários</button>
       <button class="tab-btn" data-tab="portfolio">🏆 Portfólio / Sobre</button>
+      <button class="tab-btn" data-tab="loja">🛒 Loja</button>
       <button class="tab-btn" data-tab="contato">📞 Contato & Infos</button>
     </div>
 
     <div id="tab-horarios" class="tab-panel active"></div>
     <div id="tab-portfolio" class="tab-panel"></div>
+    <div id="tab-loja" class="tab-panel"></div>
     <div id="tab-contato" class="tab-panel"></div>
   </div>
 
   <div class="footer-bar">
     <button class="btn" id="btn-download-horarios">⬇️ Baixar horarios-data.js</button>
     <button class="btn" id="btn-download-portfolio">⬇️ Baixar portfolio-data.js</button>
-    <button class="btn btn-ghost" id="btn-download-all">⬇️ Baixar os 2</button>
+    <button class="btn" id="btn-download-loja">⬇️ Baixar loja-data.js</button>
+    <button class="btn btn-ghost" id="btn-download-all">⬇️ Baixar todos</button>
     <div class="spacer"></div>
     <button class="btn btn-ghost" id="btn-preview">👁️ Pré-visualizar JSON</button>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <!-- Dados atuais (definem as globais portfolioData e horariosData) -->
+  <!-- Dados atuais (definem as globais portfolioData, horariosData e lojaData) -->
   <script src="assets/js/portfolio-data.js"></script>
   <script src="assets/js/horarios-data.js"></script>
+  <script src="assets/js/loja-data.js"></script>
 
   <script>
   (function () {
@@ -202,6 +206,7 @@
     // ---- Estado: clones editáveis dos dados carregados ----
     const H = structuredClone(horariosData);
     const P = structuredClone(portfolioData);
+    const L = structuredClone(lojaData);
 
     // ---------- Helpers de DOM ----------
     function el(tag, attrs, children) {
@@ -574,6 +579,81 @@
       root.appendChild(servCard);
     }
 
+    // ====================================================
+    // ABA LOJA
+    // ====================================================
+    function renderLoja() {
+      const root = document.getElementById("tab-loja");
+      root.innerHTML = "";
+
+      // --- Contato / pedido ---
+      const cCard = el("div", { class: "card" }, el("h2", null, "Contato do pedido (WhatsApp)"));
+      cCard.appendChild(field("WhatsApp (só números, com DDI/DDD — ex: 5546991155082)", L.contato, "whatsapp"));
+      cCard.appendChild(field("Saudação inicial da mensagem do pedido", L.contato, "saudacao", { area: true }));
+      root.appendChild(cCard);
+
+      // --- Categorias ---
+      const catCard = el("div", { class: "card" }, el("h2", null, "Categorias da loja"));
+      catCard.appendChild(el("div", { class: "muted-note" }, "A 'chave' é o identificador interno usado pelos produtos. O ícone usa classes do Font Awesome (ex: fas fa-store)."));
+      const catWrap = el("div");
+      function drawCats() {
+        catWrap.innerHTML = "";
+        L.categorias.forEach(function (cat, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", title: "Remover", onclick: function () {
+            const usados = L.produtos.filter(function (p) { return p.categoria === cat.chave; }).length;
+            if (usados > 0 && !confirm("Há " + usados + " produto(s) nesta categoria. Remover mesmo assim? (os produtos ficarão sem categoria válida)")) return;
+            L.categorias.splice(i, 1); drawCats(); drawProdutos();
+          } }, "✕"));
+          box.appendChild(el("div", { class: "row" }, [field("Chave interna", cat, "chave"), field("Nome exibido", cat, "nome")]));
+          box.appendChild(field("Ícone (Font Awesome)", cat, "icone", { placeholder: "ex: fas fa-store" }));
+          catWrap.appendChild(box);
+        });
+      }
+      drawCats();
+      catCard.appendChild(catWrap);
+      catCard.appendChild(el("button", { class: "btn btn-add", onclick: function () {
+        L.categorias.push({ chave: "", nome: "", icone: "fas fa-tag" }); drawCats();
+      } }, "+ Adicionar categoria"));
+      root.appendChild(catCard);
+
+      // --- Produtos ---
+      const prodCard = el("div", { class: "card" }, el("h2", null, "Produtos"));
+      const prodWrap = el("div");
+      function catOptions(selected) {
+        return L.categorias.map(function (c) {
+          const o = el("option", { value: c.chave }, c.nome || c.chave);
+          if (c.chave === selected) o.selected = true;
+          return o;
+        });
+      }
+      function drawProdutos() {
+        prodWrap.innerHTML = "";
+        L.produtos.forEach(function (p, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", title: "Remover produto", onclick: function () { L.produtos.splice(i, 1); drawProdutos(); } }, "✕"));
+          box.appendChild(el("div", { class: "row" }, [field("ID (único, sem espaços)", p, "id"), field("Nome", p, "nome")]));
+          // categoria
+          const sel = el("select", null, catOptions(p.categoria));
+          sel.addEventListener("change", function () { p.categoria = sel.value; });
+          box.appendChild(el("label", { class: "field" }, [el("span", null, "Categoria"), sel]));
+          box.appendChild(el("div", { class: "row" }, [field("Preço em R$ (0 = sob consulta)", p, "preco", { number: true, type: "number" })]));
+          box.appendChild(field("Descrição", p, "descricao", { area: true }));
+          box.appendChild(field("Imagem (URL)", p, "imagem", { type: "url" }));
+          box.appendChild(checkbox("Marcar como 'Mais procurado' (destaque)", p, "destaque"));
+          prodWrap.appendChild(box);
+        });
+      }
+      drawProdutos();
+      prodCard.appendChild(prodWrap);
+      prodCard.appendChild(el("button", { class: "btn btn-add", onclick: function () {
+        const primeira = (L.categorias[0] && L.categorias[0].chave) || "";
+        L.produtos.push({ id: "", nome: "", categoria: primeira, preco: 0, descricao: "", imagem: "", destaque: false });
+        drawProdutos();
+      } }, "+ Adicionar produto"));
+      root.appendChild(prodCard);
+    }
+
     // ---------- Export ----------
     function download(filename, content) {
       const blob = new Blob([content], { type: "application/javascript;charset=utf-8" });
@@ -603,21 +683,35 @@
         "const portfolioData = " + JSON.stringify(P, null, 2) + ";\n";
     }
 
+    function buildLojaFile() {
+      return "/**\n" +
+        " * Dados da Loja — Beach Tennis\n" +
+        " * Gerado pelo painel admin (admin.html).\n" +
+        " * Edite preferencialmente pelo admin para manter a estrutura.\n" +
+        " */\n\n" +
+        "const lojaData = " + JSON.stringify(L, null, 2) + ";\n";
+    }
+
     document.getElementById("btn-download-horarios").addEventListener("click", function () {
       download("horarios-data.js", buildHorariosFile()); toast("horarios-data.js baixado");
     });
     document.getElementById("btn-download-portfolio").addEventListener("click", function () {
       download("portfolio-data.js", buildPortfolioFile()); toast("portfolio-data.js baixado");
     });
+    document.getElementById("btn-download-loja").addEventListener("click", function () {
+      download("loja-data.js", buildLojaFile()); toast("loja-data.js baixado");
+    });
     document.getElementById("btn-download-all").addEventListener("click", function () {
       download("horarios-data.js", buildHorariosFile());
       download("portfolio-data.js", buildPortfolioFile());
-      toast("Os 2 arquivos foram baixados");
+      download("loja-data.js", buildLojaFile());
+      toast("Os 3 arquivos foram baixados");
     });
     document.getElementById("btn-preview").addEventListener("click", function () {
       const w = window.open("", "_blank");
+      const sep = "\n\n/* ======================================== */\n\n";
       w.document.write("<pre style='padding:16px;font:13px monospace;white-space:pre-wrap'>" +
-        (buildHorariosFile() + "\n\n/* ======================================== */\n\n" + buildPortfolioFile())
+        (buildHorariosFile() + sep + buildPortfolioFile() + sep + buildLojaFile())
           .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") +
         "</pre>");
       w.document.title = "Pré-visualização dos dados";
@@ -636,6 +730,7 @@
     // ---------- Render inicial ----------
     renderHorarios();
     renderPortfolio();
+    renderLoja();
     renderContato();
   })();
   </script>

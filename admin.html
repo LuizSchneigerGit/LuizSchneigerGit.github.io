@@ -165,9 +165,12 @@
 
   <div class="container">
     <div class="help">
-      <strong>Como publicar:</strong> edite os campos abaixo, clique em <strong>Baixar arquivos</strong>,
+      <strong>Como publicar:</strong> edite os campos abaixo, clique em <strong>Baixar</strong>,
       e substitua os arquivos baixados em <code>assets/js/</code> no repositório (commit + push).
       O GitHub Pages atualiza o site automaticamente. Nada é salvo no servidor — tudo roda no seu navegador.
+      <br>
+      O painel sempre carrega a <strong>última versão publicada</strong> dos dados (sem cache). Para continuar
+      de uma versão salva no seu computador, use <strong>⬆️ Importar arquivo</strong> e selecione um <code>*-data.js</code>.
     </div>
 
     <div class="tabs">
@@ -189,24 +192,50 @@
     <button class="btn" id="btn-download-loja">⬇️ Baixar loja-data.js</button>
     <button class="btn btn-ghost" id="btn-download-all">⬇️ Baixar todos</button>
     <div class="spacer"></div>
+    <button class="btn btn-ghost" id="btn-import">⬆️ Importar arquivo</button>
+    <input type="file" id="import-file" accept=".js,application/javascript,text/javascript" style="display:none">
     <button class="btn btn-ghost" id="btn-preview">👁️ Pré-visualizar JSON</button>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <!-- Dados atuais (definem as globais portfolioData, horariosData e lojaData) -->
-  <script src="assets/js/portfolio-data.js"></script>
-  <script src="assets/js/horarios-data.js"></script>
-  <script src="assets/js/loja-data.js"></script>
-
+  <!--
+    Os arquivos de dados são carregados dinamicamente com cache-busting (?t=timestamp),
+    para o admin SEMPRE partir da última versão publicada/commitada (sem cache do navegador).
+  -->
   <script>
   (function () {
+    var arquivos = [
+      'assets/js/portfolio-data.js',
+      'assets/js/horarios-data.js',
+      'assets/js/loja-data.js'
+    ];
+    var restantes = arquivos.length;
+    function pronto() { if (--restantes === 0) runAdmin(); }
+    arquivos.forEach(function (src) {
+      var s = document.createElement('script');
+      // timestamp único força o navegador a buscar a versão atual do arquivo
+      s.src = src + '?t=' + Date.now();
+      s.onload = pronto;
+      s.onerror = function () { console.error('Falha ao carregar', src); pronto(); };
+      document.head.appendChild(s);
+    });
+  })();
+
+  function runAdmin() {
     "use strict";
 
+    // Garante que os dados foram carregados antes de iniciar
+    if (typeof horariosData === 'undefined' || typeof portfolioData === 'undefined' || typeof lojaData === 'undefined') {
+      alert('Não foi possível carregar os dados. Verifique sua conexão e recarregue a página.');
+      return;
+    }
+
     // ---- Estado: clones editáveis dos dados carregados ----
-    const H = structuredClone(horariosData);
-    const P = structuredClone(portfolioData);
-    const L = structuredClone(lojaData);
+    // (let para permitir substituir ao importar um arquivo)
+    let H = structuredClone(horariosData);
+    let P = structuredClone(portfolioData);
+    let L = structuredClone(lojaData);
 
     // ---------- Helpers de DOM ----------
     function el(tag, attrs, children) {
@@ -727,12 +756,61 @@
       });
     });
 
+    // ---------- Importar arquivo de dados ----------
+    // Lê um *-data.js exportado e substitui o estado da aba correspondente.
+    function avaliarDados(texto) {
+      const fn = new Function(
+        texto + "\n;return {" +
+        "horariosData: typeof horariosData !== 'undefined' ? horariosData : null," +
+        "portfolioData: typeof portfolioData !== 'undefined' ? portfolioData : null," +
+        "lojaData: typeof lojaData !== 'undefined' ? lojaData : null" +
+        "};"
+      );
+      return fn();
+    }
+
+    const importInput = document.getElementById("import-file");
+    document.getElementById("btn-import").addEventListener("click", function () {
+      importInput.click();
+    });
+    importInput.addEventListener("change", function () {
+      const file = importInput.files && importInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function () {
+        try {
+          const got = avaliarDados(String(reader.result));
+          let carregou = null;
+          if (got.horariosData) {
+            H = structuredClone(got.horariosData);
+            renderHorarios(); renderContato();
+            carregou = "Horários";
+          } else if (got.portfolioData) {
+            P = structuredClone(got.portfolioData);
+            renderPortfolio();
+            carregou = "Portfólio";
+          } else if (got.lojaData) {
+            L = structuredClone(got.lojaData);
+            renderLoja();
+            carregou = "Loja";
+          }
+          if (carregou) toast("Arquivo de " + carregou + " importado");
+          else alert("Arquivo não reconhecido. Selecione um arquivo *-data.js exportado por este painel (horarios, portfolio ou loja).");
+        } catch (e) {
+          alert("Não foi possível ler o arquivo:\n" + e.message);
+        }
+        importInput.value = ""; // permite reimportar o mesmo arquivo
+      };
+      reader.onerror = function () { alert("Falha ao ler o arquivo."); };
+      reader.readAsText(file);
+    });
+
     // ---------- Render inicial ----------
     renderHorarios();
     renderPortfolio();
     renderLoja();
     renderContato();
-  })();
+  }
   </script>
 </body>
 </html>

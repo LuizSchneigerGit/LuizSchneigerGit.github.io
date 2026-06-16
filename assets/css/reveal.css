@@ -1,0 +1,27 @@
+/* =========================================================
+   Reveal on scroll — fade-in suave de imagens e cards.
+   Compartilhado por todas as páginas. Respeita quem prefere
+   menos movimento (prefers-reduced-motion).
+   ========================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal.reveal--visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Efeito específico para imagens: além do fade, um leve zoom-out */
+  img.reveal {
+    transform: translateY(24px) scale(1.04);
+  }
+  img.reveal.reveal--visible {
+    transform: none;
+  }
+}

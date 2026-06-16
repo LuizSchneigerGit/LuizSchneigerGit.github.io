@@ -325,3 +325,21 @@
   color: var(--text-color-light);
   text-align: center;
 }
+
+/* ---- Responsividade ---- */
+@media screen and (max-width: 480px) {
+  .loja__grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  .loja__card-corpo { padding: 0.85rem; }
+  .loja__card-nome { font-size: 1rem; }
+  .loja__filtro { padding: 0.5rem 0.8rem; }
+  .cart-fab { right: 1rem; bottom: 5rem; width: 52px; height: 52px; }
+}
+
+@media screen and (min-width: 1024px) {
+  .loja__grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}

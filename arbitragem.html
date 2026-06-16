@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Arbitragem - Luiz Henrique</title>
+  <meta name="description" content="Calculadora de precificação de arbitragem para eventos estaduais de Beach Tennis.">
+
+  <!-- ==================== FONTES ==================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ==================== CSS ==================== -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/arbitragem.css">
+  <link rel="stylesheet" href="assets/css/reveal.css">
+
+  <!-- ==================== ÍCONES ==================== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- ==================== HEADER ==================== -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="index.html" class="nav__logo">Luiz Henrique</a>
+
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list grid">
+          <li class="nav__item">
+            <a href="index.html" class="nav__link">
+              <i class="fas fa-home nav__icon"></i> Início
+            </a>
+          </li>
+          <li class="nav__item">
+            <a href="quem-sou-eu.html" class="nav__link">
+              <i class="fas fa-user nav__icon"></i> Quem Sou Eu
+            </a>
+          </li>
+          <li class="nav__item">
+            <a href="horarios.html" class="nav__link">
+              <i class="fas fa-calendar nav__icon"></i> Horários
+            </a>
+          </li>
+          <li class="nav__item">
+            <a href="loja.html" class="nav__link">
+              <i class="fas fa-store nav__icon"></i> Loja
+            </a>
+          </li>
+          <li class="nav__item">
+            <a href="arbitragem.html" class="nav__link active-link">
+              <i class="fas fa-calculator nav__icon"></i> Arbitragem
+            </a>
+          </li>
+        </ul>
+
+        <i class="fas fa-times nav__close" id="nav-close"></i>
+      </div>
+
+      <div class="nav__btns">
+        <i class="fas fa-moon change-theme" id="theme-button"></i>
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==================== MAIN ==================== -->
+  <main class="main">
+    <section class="arb section" id="arbitragem">
+      <h2 class="section__title">Calculadora de Arbitragem</h2>
+      <span class="section__subtitle">Eventos estaduais — calcule o valor e gere o recibo</span>
+
+      <div class="arb__container container grid">
+        <!-- ==================== FORMULÁRIO ==================== -->
+        <form class="arb__form" id="arb-form" autocomplete="off">
+          <div class="arb__grupo">
+            <h3 class="arb__grupo-titulo"><i class="fas fa-location-dot"></i> Dados do evento</h3>
+            <div class="arb__campos">
+              <div class="arb__campo arb__campo--full">
+                <label class="arb__label" for="arb-arena">Nome da Arena / Evento</label>
+                <input class="arb__input" type="text" id="arb-arena" placeholder="Ex: Mega Arena">
+              </div>
+              <div class="arb__campo arb__campo--full">
+                <label class="arb__label" for="arb-inscritos">Total de participantes (inscritos)</label>
+                <input class="arb__input" type="number" id="arb-inscritos" min="0" step="1" value="150">
+              </div>
+            </div>
+          </div>
+
+          <div class="arb__grupo">
+            <h3 class="arb__grupo-titulo"><i class="fas fa-user-tie"></i> Funções e dias</h3>
+            <div class="arb__campos">
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-dias-ag">Dias como Árbitro Geral</label>
+                <input class="arb__input" type="number" id="arb-dias-ag" min="0" step="1" value="1">
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-dias-aux">Dias como Árbitro Auxiliar</label>
+                <input class="arb__input" type="number" id="arb-dias-aux" min="0" step="1" value="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="arb__grupo">
+            <h3 class="arb__grupo-titulo"><i class="fas fa-car"></i> Deslocamento</h3>
+            <div class="arb__campos">
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-km">Km rodados <span class="arb__hint">(× R$ 0,85)</span></label>
+                <input class="arb__input" type="number" id="arb-km" min="0" step="0.1" value="0">
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-pedagios">Pedágios (R$)</label>
+                <input class="arb__input" type="number" id="arb-pedagios" min="0" step="0.01" value="0">
+              </div>
+              <div class="arb__campo arb__campo--full">
+                <label class="arb__label" for="arb-refeicoes">Refeições <span class="arb__hint">(opcional — R$ 50 cada)</span></label>
+                <input class="arb__input" type="number" id="arb-refeicoes" min="0" step="1" value="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="arb__grupo">
+            <h3 class="arb__grupo-titulo"><i class="fas fa-receipt"></i> Dados do recibo</h3>
+            <div class="arb__campos">
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-arbitro">Nome do árbitro</label>
+                <input class="arb__input" type="text" id="arb-arbitro" placeholder="Seu nome">
+              </div>
+              <div class="arb__campo">
+                <label class="arb__label" for="arb-pix">Chave PIX</label>
+                <input class="arb__input" type="text" id="arb-pix" placeholder="Sua chave PIX">
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- ==================== RESULTADO ==================== -->
+        <div class="arb__resultado">
+          <div class="arb__resumo" id="arb-resumo"><!-- resumo dinâmico --></div>
+
+          <div class="arb__recibo-box">
+            <h3 class="arb__recibo-titulo"><i class="fas fa-clipboard"></i> Resumo para cópia (WhatsApp/E-mail)</h3>
+            <textarea class="arb__recibo" id="arb-recibo" readonly spellcheck="false"></textarea>
+            <div class="arb__acoes">
+              <button type="button" class="arb__btn arb__btn--copiar" id="arb-copiar">
+                <i class="fas fa-copy"></i> Copiar
+              </button>
+              <button type="button" class="arb__btn arb__btn--whatsapp" id="arb-whatsapp">
+                <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="arb__nota container">
+        Valores conforme a tabela oficial de arbitragem (eventos estaduais). Despesas de
+        deslocamento, hospedagem e alimentação são pagas à parte.
+      </p>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="footer__bg">
+      <div class="footer__container container grid">
+        <div>
+          <h1 class="footer__title">Luiz Henrique</h1>
+          <span class="footer__subtitle">Atleta e Professor de Beach Tennis</span>
+        </div>
+
+        <ul class="footer__links">
+          <li><a href="quem-sou-eu.html" class="footer__link">Quem Sou Eu</a></li>
+          <li><a href="horarios.html" class="footer__link">Horários</a></li>
+          <li><a href="loja.html" class="footer__link">Loja</a></li>
+          <li><a href="arbitragem.html" class="footer__link">Arbitragem</a></li>
+        </ul>
+
+        <div class="footer__socials">
+          <a href="https://instagram.com/LuizSchneigerBT" target="_blank" rel="noopener" class="footer__social">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://wa.me/5546991155082" target="_blank" rel="noopener" class="footer__social">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="mailto:Luiz.schneiger@gmail.com" class="footer__social">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+
+      <p class="footer__copy">&#169; Luiz Henrique. Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+  <!-- ==================== SCROLL TOP ==================== -->
+  <a href="#" class="scrollup" id="scroll-up">
+    <i class="fas fa-arrow-up scrollup__icon"></i>
+  </a>
+
+  <!-- ==================== JS ==================== -->
+  <script src="assets/js/arbitragem-data.js"></script>
+  <script src="assets/js/arbitragem.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/reveal.js"></script>
+</body>
+</html>

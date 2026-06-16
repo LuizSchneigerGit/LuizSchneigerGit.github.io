@@ -1,0 +1,183 @@
+/* ESTILOS DA CALCULADORA DE ARBITRAGEM — responsivo.
+   Reaproveita as variáveis de styles.css (cores, fontes, tema escuro). */
+
+.arb__container {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+/* ---- Formulário ---- */
+.arb__form {
+  background-color: var(--container-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+
+.arb__grupo {
+  margin-bottom: 1.75rem;
+}
+.arb__grupo:last-of-type { margin-bottom: 0; }
+
+.arb__grupo-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-semi-bold);
+  color: var(--first-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--first-color-lighter);
+}
+
+.arb__campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.arb__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.arb__campo--full { grid-column: 1 / -1; }
+
+.arb__label {
+  font-size: var(--smaller-font-size);
+  font-weight: var(--font-medium);
+  color: var(--title-color);
+}
+.arb__hint { color: var(--text-color-light); font-weight: 400; }
+
+.arb__input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--first-color-lighter);
+  border-radius: 0.5rem;
+  background-color: var(--body-color);
+  color: var(--text-color);
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.arb__input:focus {
+  border-color: var(--first-color);
+  box-shadow: 0 0 0 3px hsla(var(--hue-color), 69%, 61%, 0.15);
+}
+
+/* ---- Resultado ---- */
+.arb__resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.arb__resumo {
+  background-color: var(--container-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem 1.5rem;
+}
+
+.arb__linha {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--container-color-alt);
+  font-size: var(--small-font-size);
+}
+.arb__linha:last-child { border-bottom: none; }
+.arb__linha span { color: var(--text-color); }
+.arb__linha strong { color: var(--title-color); white-space: nowrap; }
+
+.arb__linha--total {
+  margin-top: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 2px solid var(--first-color-lighter);
+  border-bottom: none;
+  font-size: var(--h3-font-size);
+}
+.arb__linha--total span { font-weight: var(--font-semi-bold); color: var(--title-color); }
+.arb__linha--total strong { color: var(--first-color); }
+
+/* ---- Recibo ---- */
+.arb__recibo-box {
+  background-color: var(--container-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem 1.5rem;
+}
+.arb__recibo-titulo {
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-semi-bold);
+  color: var(--title-color);
+  margin-bottom: 0.75rem;
+}
+.arb__recibo {
+  width: 100%;
+  min-height: 220px;
+  resize: vertical;
+  padding: 1rem;
+  border: 1px dashed var(--first-color-lighter);
+  border-radius: 0.5rem;
+  background-color: var(--body-color);
+  color: var(--text-color);
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre;
+  outline: none;
+}
+
+.arb__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.arb__btn {
+  flex: 1;
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: var(--body-font);
+  font-size: var(--small-font-size);
+  font-weight: var(--font-semi-bold);
+  cursor: pointer;
+  transition: filter 0.2s ease, background-color 0.2s ease;
+}
+.arb__btn--copiar { background-color: var(--first-color); color: #fff; }
+.arb__btn--copiar:hover { background-color: var(--first-color-alt); }
+.arb__btn--whatsapp { background-color: #25D366; color: #fff; }
+.arb__btn--whatsapp:hover { filter: brightness(0.95); }
+
+.arb__nota {
+  font-size: var(--smaller-font-size);
+  color: var(--text-color-light);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* ---- Responsividade ---- */
+@media screen and (min-width: 768px) {
+  .arb__container {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .arb__campos { grid-template-columns: 1fr; }
+  .arb__form, .arb__resumo, .arb__recibo-box { padding: 1.1rem; }
+  .arb__btn { min-width: 100%; }
+}

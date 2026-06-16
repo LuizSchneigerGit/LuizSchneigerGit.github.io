@@ -2,7 +2,9 @@
  * Script para carregar dinamicamente os dados do portfólio na página
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+(function () {
+  function go() {
+  if (typeof portfolioData === 'undefined') return;
   // Carregar informações básicas
   document.querySelector('.home__title').textContent = `Olá, sou ${portfolioData.informacoesBasicas.nome}`;
   document.querySelector('.home__subtitle').textContent = portfolioData.informacoesBasicas.profissao;
@@ -224,4 +226,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
-});
+  }
+
+  // Roda imediatamente se o DOM já estiver pronto (carregamento dinâmico),
+  // ou aguarda o DOMContentLoaded caso contrário.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+  else go();
+})();

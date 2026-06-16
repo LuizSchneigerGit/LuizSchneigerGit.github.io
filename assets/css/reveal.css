@@ -24,4 +24,15 @@
   img.reveal.reveal--visible {
     transform: none;
   }
+
+  /* Variante "soft": só opacidade (sem deslocamento).
+     Usada em blocos de carrossel (Swiper) para não interferir nas
+     transformações horizontais que o próprio Swiper aplica.
+     Também anuncia will-change apenas de 'opacity' — nunca 'transform' —
+     para não promover o container do Swiper a uma camada de composição. */
+  .reveal.reveal--soft,
+  .reveal.reveal--soft.reveal--visible {
+    transform: none;
+    will-change: opacity;
+  }
 }

@@ -3,7 +3,8 @@
  * O pedido final é enviado por WhatsApp com a lista de itens e o total.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
+  function go() {
   if (typeof lojaData === 'undefined') return;
 
   const CART_KEY = 'loja-carrinho';
@@ -245,4 +246,10 @@ document.addEventListener('DOMContentLoaded', function () {
   renderFiltros();
   renderGrid();
   renderCart();
-});
+  }
+
+  // Roda imediatamente se o DOM já estiver pronto (carregamento dinâmico),
+  // ou aguarda o DOMContentLoaded caso contrário.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+  else go();
+})();

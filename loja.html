@@ -145,8 +145,19 @@
   </a>
 
   <!-- ==================== JS ==================== -->
-  <script src="assets/js/loja-data.js"></script>
-  <script src="assets/js/loja-loader.js"></script>
+  <script>
+    // Carrega dados + loader sempre frescos (cache-busting) para refletir a última versão publicada.
+    (function () {
+      function load(src, cb) {
+        var s = document.createElement('script');
+        s.src = src + '?t=' + Date.now();
+        s.onload = cb || function () {};
+        s.onerror = cb || function () {};
+        document.head.appendChild(s);
+      }
+      load('assets/js/loja-data.js', function () { load('assets/js/loja-loader.js'); });
+    })();
+  </script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/reveal.js"></script>
 </body>

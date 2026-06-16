@@ -6,7 +6,8 @@
  * O CSS (schedule.css) decide qual exibir conforme a largura.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
+  function go() {
   const container = document.querySelector('.horarios__container');
   if (!container || typeof horariosData === 'undefined') return;
 
@@ -215,4 +216,10 @@ document.addEventListener('DOMContentLoaded', function () {
       (disponivel ? '<span class="horarios__whatsapp"><i class="fab fa-whatsapp"></i> Agendar</span>' : '');
     return info;
   }
-});
+  }
+
+  // Roda imediatamente se o DOM já estiver pronto (carregamento dinâmico),
+  // ou aguarda o DOMContentLoaded caso contrário.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+  else go();
+})();

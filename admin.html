@@ -42,7 +42,7 @@
     }
     header h1 { font-size: 1.15rem; font-weight: 600; }
     header .hint { font-size: .8rem; opacity: .9; font-weight: 400; }
-    .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
     .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 24px; }
     .tab-btn {
       background: var(--card);
@@ -65,6 +65,11 @@
       border-radius: var(--radius);
       padding: 20px;
       margin-bottom: 18px;
+      /* Campos em 2 colunas (mais dados por tela) */
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 16px;
+      align-items: start;
     }
     .card > h2 {
       font-size: 1.05rem;
@@ -103,6 +108,24 @@
       margin-bottom: 12px;
       background: #fafbfc;
       position: relative;
+      /* Campos em 2 colunas dentro do box também */
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 16px;
+      align-items: start;
+    }
+
+    /* Layout em grade: só os campos (label) ocupam colunas;
+       títulos, listas, botões, sub-boxes e textareas ocupam a linha inteira. */
+    .card > :not(label.field):not(label.inline-check),
+    .item-box > :not(label.field):not(label.inline-check) {
+      grid-column: 1 / -1;
+    }
+    label.field:has(textarea) { grid-column: 1 / -1; }
+
+    /* No celular volta para 1 coluna */
+    @media (max-width: 640px) {
+      .card, .item-box { grid-template-columns: 1fr; }
     }
     .btn {
       display: inline-flex;

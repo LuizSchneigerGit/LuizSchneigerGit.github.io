@@ -203,7 +203,9 @@
       O painel sempre carrega a <strong>última versão publicada</strong> dos dados (sem cache). Para continuar
       de uma versão salva no seu computador, use <strong>⬆️ Importar arquivo</strong> e selecione um <code>*-data.js</code>.
       Nos campos de imagem, use <strong>📷 Enviar imagem</strong> para subir uma foto do PC — ela é redimensionada e
-      embutida no próprio arquivo de dados (não precisa hospedar o arquivo separadamente).
+      vira um arquivo em <code>assets/img/</code>. No Chrome/Edge, clique antes em <strong>📁 Conectar pasta</strong>
+      (escolha a pasta do projeto) para salvar automaticamente; em outros navegadores a imagem é baixada para você
+      mover para <code>assets/img/</code>. Depois faça commit da imagem junto com o <code>*-data.js</code>.
     </div>
 
     <div class="tabs">
@@ -225,6 +227,7 @@
     <button class="btn" id="btn-download-loja">⬇️ Baixar loja-data.js</button>
     <button class="btn btn-ghost" id="btn-download-all">⬇️ Baixar todos</button>
     <div class="spacer"></div>
+    <button class="btn btn-ghost" id="btn-conectar-pasta" style="display:none">📁 Conectar pasta (salvar imagens)</button>
     <button class="btn btn-ghost" id="btn-import">⬆️ Importar arquivo</button>
     <input type="file" id="import-file" accept=".js,application/javascript,text/javascript" style="display:none">
     <button class="btn btn-ghost" id="btn-preview">👁️ Pré-visualizar JSON</button>
@@ -335,59 +338,95 @@
       setTimeout(function () { t.classList.remove("show"); }, 2200);
     }
 
-    // Lê uma imagem do PC, redimensiona/comprime e devolve um data URL (base64).
-    function embedImage(file, maxDim, quality, cb) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        const img = new Image();
-        img.onload = function () {
-          let w = img.width, h = img.height;
-          if (w > maxDim || h > maxDim) {
-            const s = Math.min(maxDim / w, maxDim / h);
-            w = Math.round(w * s); h = Math.round(h * s);
-          }
-          const canvas = document.createElement("canvas");
-          canvas.width = w; canvas.height = h;
-          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-          cb(canvas.toDataURL("image/jpeg", quality));
-        };
-        img.onerror = function () { alert("Não foi possível ler a imagem."); };
-        img.src = reader.result;
-      };
-      reader.onerror = function () { alert("Falha ao abrir o arquivo."); };
-      reader.readAsDataURL(file);
+    // ---------- Upload de imagem -> arquivo em assets/img/ ----------
+    // Em navegadores compatíveis (Chrome/Edge) salva direto na pasta conectada;
+    // nos demais, baixa o arquivo otimizado para você mover para assets/img/.
+    let projDir = null; // pasta do projeto (File System Access API)
+    const fsSupported = (typeof window !== "undefined") && ("showDirectoryPicker" in window);
+
+    function slugNome(s) {
+      var base = (s || "img").normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .toLowerCase().replace(/\.[^.]+$/, "").replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "").slice(0, 40) || "img";
+      return base + "-" + Date.now().toString(36).slice(-5) + ".jpg";
     }
 
-    // Campo de imagem: URL manual OU upload (embutido em base64). Mostra prévia.
-    function imageField(label, obj, key) {
-      const isData = function () { return obj[key] && String(obj[key]).slice(0, 5) === "data:"; };
+    function comprimirImagem(file, maxDim, quality) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) { var s = Math.min(maxDim / w, maxDim / h); w = Math.round(w * s); h = Math.round(h * s); }
+            var c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            c.getContext("2d").drawImage(img, 0, 0, w, h);
+            c.toBlob(function (b) { b ? resolve(b) : reject(new Error("toBlob")); }, "image/jpeg", quality);
+          };
+          img.onerror = function () { reject(new Error("imagem inválida")); };
+          img.src = reader.result;
+        };
+        reader.onerror = function () { reject(new Error("leitura")); };
+        reader.readAsDataURL(file);
+      });
+    }
 
-      const span = el("span", null, label);
-      const preview = el("img", { class: "img-preview" });
-      const input = el("input", { type: "text", placeholder: "Cole uma URL ou envie uma imagem do PC" });
-      const file = el("input", { type: "file", accept: "image/*", style: "display:none" });
-      const btn = el("button", { type: "button", class: "btn btn-ghost btn-sm",
-        onclick: function () { file.click(); } }, "📷 Enviar imagem");
+    async function salvarEmImg(blob, nome) {
+      var assets = await projDir.getDirectoryHandle("assets", { create: true });
+      var img = await assets.getDirectoryHandle("img", { create: true });
+      var fh = await img.getFileHandle(nome, { create: true });
+      var w = await fh.createWritable();
+      await w.write(blob);
+      await w.close();
+    }
+
+    function baixarBlob(blob, nome) {
+      var url = URL.createObjectURL(blob);
+      var a = el("a", { href: url, download: nome });
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+
+    // Campo de imagem: URL manual OU upload (vira arquivo em assets/img/). Mostra prévia.
+    function imageField(label, obj, key) {
+      var isData = function () { return obj[key] && String(obj[key]).slice(0, 5) === "data:"; };
+      var span = el("span", null, label);
+      var preview = el("img", { class: "img-preview" });
+      var input = el("input", { type: "text", placeholder: "Cole uma URL ou envie uma imagem do PC" });
+      var file = el("input", { type: "file", accept: "image/*", style: "display:none" });
+      var btn = el("button", { type: "button", class: "btn btn-ghost btn-sm", onclick: function () { file.click(); } }, "📷 Enviar imagem");
 
       function refresh() {
         if (obj[key]) { preview.src = obj[key]; preview.style.display = "block"; }
         else { preview.removeAttribute("src"); preview.style.display = "none"; }
-        if (isData()) { input.value = ""; input.placeholder = "✓ imagem embutida — envie outra ou cole uma URL"; }
+        if (isData()) { input.value = ""; input.placeholder = "✓ imagem base64 — envie outra para virar arquivo em assets/img/"; }
         else { input.value = obj[key] || ""; input.placeholder = "Cole uma URL ou envie uma imagem do PC"; }
       }
       input.addEventListener("input", function () { obj[key] = input.value; refresh(); });
       file.addEventListener("change", function () {
-        const f = file.files && file.files[0];
+        var f = file.files && file.files[0];
         if (!f) return;
-        embedImage(f, 1280, 0.82, function (dataUrl) {
-          obj[key] = dataUrl;
-          refresh();
-          toast("Imagem embutida (" + Math.round(dataUrl.length / 1024) + " KB)");
-        });
+        comprimirImagem(f, 1280, 0.82).then(function (blob) {
+          var nome = slugNome(f.name);
+          obj[key] = "assets/img/" + nome;
+          var u = URL.createObjectURL(blob);
+          preview.src = u; preview.style.display = "block";
+          input.value = obj[key];
+          if (projDir) {
+            salvarEmImg(blob, nome).then(
+              function () { toast("Salva em assets/img/" + nome); },
+              function () { baixarBlob(blob, nome); toast("Sem permissão de escrita — baixada; mova para assets/img/"); }
+            );
+          } else {
+            baixarBlob(blob, nome);
+            toast("Baixada: mova para assets/img/ e faça commit" + (fsSupported ? " (ou conecte a pasta)" : ""));
+          }
+        }, function () { alert("Não foi possível processar a imagem."); });
         file.value = "";
       });
 
-      const controls = el("div", { class: "img-controls" }, [input, btn, file]);
+      var controls = el("div", { class: "img-controls" }, [input, btn, file]);
       refresh();
       return el("label", { class: "field field--image" }, [span, preview, controls]);
     }
@@ -858,6 +897,19 @@
         "};"
       );
       return fn();
+    }
+
+    // Conectar pasta do projeto (para salvar imagens em assets/img/)
+    const btnConectar = document.getElementById("btn-conectar-pasta");
+    if (btnConectar && fsSupported) {
+      btnConectar.style.display = "";
+      btnConectar.addEventListener("click", async function () {
+        try {
+          projDir = await window.showDirectoryPicker({ mode: "readwrite" });
+          btnConectar.textContent = "📁 Pasta conectada ✓";
+          toast("Pasta conectada — imagens vão para assets/img/");
+        } catch (e) { /* cancelado pelo usuário */ }
+      });
     }
 
     const importInput = document.getElementById("import-file");

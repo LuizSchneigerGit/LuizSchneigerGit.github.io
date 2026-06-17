@@ -716,6 +716,25 @@
       galCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.galeria.push({ titulo: "", url: "", descricao: "" }); drawGal(); } }, "+ Adicionar foto"));
       root.appendChild(galCard);
 
+      // Certificados (galeria)
+      if (!P.certificados) P.certificados = [];
+      const certCard = el("div", { class: "card" }, el("h2", null, "Certificados (galeria)"));
+      const certWrap = el("div");
+      function drawCerts() {
+        certWrap.innerHTML = "";
+        P.certificados.forEach(function (c, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", title: "Remover", onclick: function () { P.certificados.splice(i, 1); drawCerts(); } }, "✕"));
+          box.appendChild(field("Título", c, "titulo"));
+          box.appendChild(imageField("Imagem do certificado", c, "url"));
+          certWrap.appendChild(box);
+        });
+      }
+      drawCerts();
+      certCard.appendChild(certWrap);
+      certCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.certificados.push({ titulo: "", url: "" }); drawCerts(); } }, "+ Adicionar certificado"));
+      root.appendChild(certCard);
+
       // Serviços
       const servCard = el("div", { class: "card" }, el("h2", null, "Serviços oferecidos"));
       const servWrap = el("div");

@@ -46,7 +46,7 @@
   function tipo(el) {
     if (el.tagName === 'IMG') {
       const ok = !el.closest('.swiper') && !el.closest('.home__blob') &&
-                 !el.closest(CARD_SEL) && !el.closest(SOFT_SEL);
+                 !el.closest('.lightbox') && !el.closest(CARD_SEL) && !el.closest(SOFT_SEL);
       return ok ? 'img' : null;
     }
     if (!el.matches) return null;

@@ -197,6 +197,14 @@ const portfolioData = {
     }
   ],
   
+  // Certificados (galeria) — fotos dos certificados/diplomas dos cursos
+  certificados: [
+    { titulo: "Módulo CBT Verde", url: "assets/img/portfolio1.jpg" },
+    { titulo: "Módulo CBT Amarelo", url: "assets/img/portfolio2.jpg" },
+    { titulo: "Módulo CBT Azul", url: "assets/img/portfolio3.jpg" },
+    { titulo: "Curso de Árbitro de Beach Tennis", url: "assets/img/about.jpg" }
+  ],
+
   // Serviços oferecidos
   servicos: [
     {

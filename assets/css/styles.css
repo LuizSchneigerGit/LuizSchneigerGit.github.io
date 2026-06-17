@@ -175,6 +175,11 @@ img {
   color: var(--first-color);
 }
 
+/* Logo (imagem) no header e rodapé */
+.nav__logo { display: inline-flex; align-items: center; }
+.nav__logo-img { height: 34px; width: auto; display: block; }
+.footer__logo-img { height: 42px; width: auto; display: block; margin-bottom: 0.25rem; }
+
 .nav__toggle {
   font-size: 1.1rem;
   cursor: pointer;

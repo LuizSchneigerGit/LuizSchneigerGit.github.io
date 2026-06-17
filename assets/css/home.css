@@ -37,6 +37,15 @@ body {
 
 img { max-width: 100%; height: auto; display: block; }
 
+/* Logo da marca no topo */
+.home__logo {
+  display: block;
+  max-width: 240px;
+  width: 70%;
+  height: auto;
+  margin: 0 auto;
+}
+
 /* Cartão central (linktree) */
 .home-linktree {
   width: 100%;

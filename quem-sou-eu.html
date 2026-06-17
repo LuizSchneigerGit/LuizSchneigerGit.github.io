@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/img/logo-icone.png">
   <title>Quem Sou Eu - Luiz Henrique</title>
   <meta name="description" content="Conheça a trajetória de Luiz Henrique no Beach Tennis: atleta, professor, conquistas, serviços e contato.">
 
@@ -34,7 +35,10 @@
   <!-- ==================== HEADER ==================== -->
   <header class="header" id="header">
     <nav class="nav container">
-      <a href="index.html" class="nav__logo">Luiz Henrique</a>
+      <a href="index.html" class="nav__logo" aria-label="Luiz Schneiger Beach Tennis">
+        <img src="assets/img/logo-completo.png" alt="Luiz Schneiger Beach Tennis" class="nav__logo-img"
+             onerror="this.replaceWith(document.createTextNode('Luiz Schneiger'))">
+      </a>
       
       <div class="nav__menu" id="nav-menu">
         <ul class="nav__list grid">
@@ -549,7 +553,8 @@
     <div class="footer__bg">
       <div class="footer__container container grid">
         <div>
-          <h1 class="footer__title">Luiz Henrique</h1>
+          <img src="assets/img/logo-completo-branco.png" alt="Luiz Schneiger Beach Tennis" class="footer__logo-img"
+               onerror="this.replaceWith(Object.assign(document.createElement('h1'),{className:'footer__title',textContent:'Luiz Schneiger'}))">
           <span class="footer__subtitle">Atleta e Professor de Beach Tennis</span>
         </div>
         

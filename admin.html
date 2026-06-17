@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="assets/img/logo-icone.png">
   <title>Admin — Portfólio Beach Tennis</title>
   <style>
     :root {
@@ -183,9 +184,68 @@
     }
     .help code { background: rgba(13,71,161,.1); padding: 2px 6px; border-radius: 4px; font-size: .85em; }
     .muted-note { font-size: .8rem; color: var(--muted); margin-top: -8px; margin-bottom: 12px; }
+    /* Login */
+    .login-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(160deg, #1976D2, #0d3a66);
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .login-box {
+      width: min(360px, 100%); background: #fff; border-radius: 12px;
+      padding: 28px 24px; box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      display: flex; flex-direction: column; gap: 12px; text-align: center;
+    }
+    .login-box h2 { font-size: 1.25rem; color: var(--text); }
+    .login-sub { font-size: .85rem; color: var(--muted); margin-top: -6px; }
+    .login-box input { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: .95rem; }
+    .login-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(33,150,243,.15); }
+    .login-box button { padding: 12px; border: none; border-radius: 8px; background: var(--primary); color: #fff; font-weight: 600; font-size: .95rem; cursor: pointer; }
+    .login-box button:hover { background: var(--primary-dark); }
+    .login-erro { color: var(--danger); font-size: .85rem; min-height: 1em; }
   </style>
 </head>
 <body>
+  <!-- ==================== LOGIN (deterrente, hash SHA-256) ==================== -->
+  <div class="login-overlay" id="admin-login">
+    <form class="login-box" id="login-form">
+      <h2>🔒 Painel Admin</h2>
+      <p class="login-sub">Acesso restrito</p>
+      <input type="text" id="login-user" placeholder="Usuário" autocomplete="username" autofocus>
+      <input type="password" id="login-pass" placeholder="Senha" autocomplete="current-password">
+      <button type="submit">Entrar</button>
+      <p class="login-erro" id="login-erro"></p>
+    </form>
+  </div>
+  <script>
+    (function () {
+      // Hashes SHA-256 das credenciais (deterrente — não é segurança forte).
+      var U = "d9ad3d9eb504e0c6d1906d3d103a9fdf990d8d7af4fc400dceaf73a3806a4e5a";
+      var P = "9442f8b8f2daaf819f28172bba842a028b10c9df36b78427d1c8c0befa59a032";
+      var ov = document.getElementById("admin-login");
+      async function sha(s) {
+        var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+        return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+      }
+      if (sessionStorage.getItem("admin-auth") === "1") { ov.style.display = "none"; return; }
+      document.getElementById("login-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var u = document.getElementById("login-user").value;
+        var p = document.getElementById("login-pass").value;
+        try {
+          var uh = await sha(u), ph = await sha(p);
+          if (uh === U && ph === P) {
+            sessionStorage.setItem("admin-auth", "1");
+            ov.style.display = "none";
+          } else {
+            document.getElementById("login-erro").textContent = "Usuário ou senha incorretos.";
+          }
+        } catch (err) {
+          document.getElementById("login-erro").textContent = "Não foi possível validar (use https ou localhost).";
+        }
+      });
+    })();
+  </script>
+
   <header>
     <div>
       <h1>⚙️ Painel Admin — Beach Tennis</h1>
@@ -514,12 +574,14 @@
             sel.addEventListener("change", function () { aula.categoria = sel.value; });
             ab.appendChild(el("label", { class: "field" }, [el("span", null, "Categoria"), sel]));
             ab.appendChild(checkbox("Disponível para agendamento", aula, "disponivel"));
+            if (aula.vagas === undefined) aula.vagas = 4;
+            ab.appendChild(field("Vagas (0 a 4)", aula, "vagas", { number: true, type: "number" }));
             ab.appendChild(field("Observação", aula, "observacao", { placeholder: "ex: Turma completa" }));
             box.appendChild(ab);
           });
           box.appendChild(el("button", { class: "btn btn-add btn-sm", onclick: function () {
             const firstCat = Object.keys(grid.categorias)[0] || "";
-            diaObj.aulas.push({ horario: "", categoria: firstCat, disponivel: true, observacao: "" });
+            diaObj.aulas.push({ horario: "", categoria: firstCat, disponivel: true, vagas: 4, observacao: "" });
             drawAulas();
           } }, "+ Adicionar aula"));
           aulasWrap.appendChild(box);
@@ -548,9 +610,39 @@
       card.appendChild(field("Instruções (subtítulo da tabela de horários)", c, "instrucoes", { area: true }));
       root.appendChild(card);
 
-      const infoCard = el("div", { class: "card" }, el("h2", null, "Informações adicionais (lista na página de horários)"));
-      infoCard.appendChild(stringList(H.informacoesAdicionais, { area: false }));
-      root.appendChild(infoCard);
+      // Focos de aprendizado (opções no agendamento)
+      if (!H.focosAprendizado) H.focosAprendizado = [];
+      const focCard = el("div", { class: "card" }, el("h2", null, "Focos de aprendizado (opções no agendamento)"));
+      focCard.appendChild(stringList(H.focosAprendizado, { area: false }));
+      root.appendChild(focCard);
+
+      // Dicas para o treino
+      if (!H.dicas) H.dicas = [];
+      const dicasCard = el("div", { class: "card" }, el("h2", null, "Dicas para o treino"));
+      dicasCard.appendChild(field("Título da seção", H, "dicasTitulo"));
+      const dicasWrap = el("div");
+      function drawDicas() {
+        dicasWrap.innerHTML = "";
+        H.dicas.forEach(function (d, i) {
+          const box = el("div", { class: "item-box" });
+          box.appendChild(el("button", { class: "remove-x", title: "Remover", onclick: function () { H.dicas.splice(i, 1); drawDicas(); } }, "✕"));
+          box.appendChild(el("div", { class: "row" }, [field("Título", d, "titulo"), field("Ícone (Font Awesome)", d, "icone")]));
+          box.appendChild(field("Texto", d, "texto", { area: true }));
+          dicasWrap.appendChild(box);
+        });
+      }
+      drawDicas();
+      dicasCard.appendChild(dicasWrap);
+      dicasCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { H.dicas.push({ titulo: "", icone: "fas fa-circle-info", texto: "" }); drawDicas(); } }, "+ Adicionar dica"));
+      root.appendChild(dicasCard);
+
+      // Endereço das aulas
+      if (!H.endereco) H.endereco = { titulo: "Endereço das aulas", texto: "", mapsUrl: "" };
+      const endCard = el("div", { class: "card" }, el("h2", null, "Endereço das aulas"));
+      endCard.appendChild(field("Título", H.endereco, "titulo"));
+      endCard.appendChild(field("Endereço (texto)", H.endereco, "texto", { area: true }));
+      endCard.appendChild(field("Link do Google Maps", H.endereco, "mapsUrl", { type: "url" }));
+      root.appendChild(endCard);
     }
 
     // ====================================================

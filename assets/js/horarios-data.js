@@ -1,7 +1,7 @@
 /**
  * Arquivo de configuração de horários de aula de Beach Tennis
- * Gerado pelo painel admin (admin.html).
- * Edite preferencialmente pelo admin para manter a estrutura.
+ * Gerado/editado pelo painel admin (admin.html).
+ * Cada aula tem "vagas" (0 a 4): 0 = turma cheia; 1 ou 2 = poucas vagas (destaque).
  */
 
 const horariosData = {
@@ -65,96 +65,64 @@ const horariosData = {
     {
       "dia": "Segunda",
       "aulas": [
-        {
-          "horario": "16:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "Horário Disponível"
-        },
-        {
-          "horario": "18:00",
-          "categoria": "categoriaD",
-          "disponivel": true,
-          "observacao": "2 Vagas, Categoria E/D "
-        },
-        {
-          "horario": "20:00",
-          "categoria": "categoriaE",
-          "disponivel": true,
-          "observacao": "2 Vagas, Treino de Casal nível E/D"
-        },
-        {
-          "horario": "17:00",
-          "categoria": "categoriaE",
-          "disponivel": false,
-          "observacao": ""
-        },
-        {
-          "horario": "19:00",
-          "categoria": "categoriaD",
-          "disponivel": false,
-          "observacao": ""
-        },
-        {
-          "horario": "21:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "Horário Livre"
-        }
+        { "horario": "16:00", "categoria": "experimental", "disponivel": true, "vagas": 4, "observacao": "Horário disponível" },
+        { "horario": "18:00", "categoria": "categoriaD", "disponivel": true, "vagas": 2, "observacao": "Categoria E/D" },
+        { "horario": "20:00", "categoria": "categoriaE", "disponivel": true, "vagas": 2, "observacao": "Treino de casal nível E/D" },
+        { "horario": "17:00", "categoria": "categoriaE", "disponivel": false, "vagas": 0, "observacao": "" },
+        { "horario": "19:00", "categoria": "categoriaD", "disponivel": false, "vagas": 0, "observacao": "" },
+        { "horario": "21:00", "categoria": "experimental", "disponivel": true, "vagas": 4, "observacao": "Horário livre" }
       ]
     },
     {
       "dia": "Terça",
       "aulas": [
-        {
-          "horario": "16:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "Horário Livre"
-        },
-        {
-          "horario": "17:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "Horário Livre"
-        },
-        {
-          "horario": "20:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "Horário Livre"
-        },
-        {
-          "horario": "21:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "Horário Livre"
-        },
-        {
-          "horario": "19:00",
-          "categoria": "categoriaE",
-          "disponivel": true,
-          "observacao": "1 Vagas, Categoria E/D "
-        },
-        {
-          "horario": "18:00",
-          "categoria": "experimental",
-          "disponivel": true,
-          "observacao": "2 Vagas, Categoria E"
-        }
+        { "horario": "16:00", "categoria": "experimental", "disponivel": true, "vagas": 4, "observacao": "Horário livre" },
+        { "horario": "17:00", "categoria": "experimental", "disponivel": true, "vagas": 4, "observacao": "Horário livre" },
+        { "horario": "18:00", "categoria": "experimental", "disponivel": true, "vagas": 2, "observacao": "Categoria E" },
+        { "horario": "19:00", "categoria": "categoriaE", "disponivel": true, "vagas": 1, "observacao": "Categoria E/D" },
+        { "horario": "20:00", "categoria": "experimental", "disponivel": true, "vagas": 4, "observacao": "Horário livre" },
+        { "horario": "21:00", "categoria": "experimental", "disponivel": true, "vagas": 4, "observacao": "Horário livre" }
       ]
     }
   ],
   "contato": {
     "whatsapp": "5546991155082",
     "mensagemPadrao": "Olá, gostaria de agendar uma aula de Beach Tennis!",
-    "instrucoes": "Clique no horário desejado para entrar em contato via WhatsApp e agendar sua aula."
+    "instrucoes": "Clique no horário desejado para agendar sua aula."
   },
-  "informacoesAdicionais": [
-    "As aulas têm duração de 1 hora.",
-    "É recomendável chegar 10 minutos antes do horário marcado.",
-    "Traga sua própria raquete ou alugue no local.",
-    "Use roupas leves e confortáveis.",
-    "Protetor solar é recomendado para aulas ao ar livre."
-  ]
+  "vagasMaximo": 4,
+  "focosAprendizado": [
+    "Sou novo no esporte",
+    "Queima de calorias",
+    "Sair do sedentarismo",
+    "Aprimoramento de técnica"
+  ],
+  "dicasTitulo": "Dicas para o nosso treino",
+  "dicas": [
+    {
+      "titulo": "Horário",
+      "icone": "fas fa-clock",
+      "texto": "Nossas aulas têm duração de 50 a 55 minutos. Pedimos que tente chegar 10 minutos antes do horário agendado; esse tempinho é fundamental para você se organizar, trocar o calçado e já entrar no clima, garantindo que possamos iniciar nossa aula pontualmente."
+    },
+    {
+      "titulo": "Equipamento",
+      "icone": "fas fa-table-tennis-paddle-ball",
+      "texto": "Está começando agora ou esqueceu a raquete? Sem problemas! Nós disponibilizamos raquetes para empréstimo durante a aula."
+    },
+    {
+      "titulo": "Vestuário",
+      "icone": "fas fa-shirt",
+      "texto": "O ideal é vir com roupas leves e bem confortáveis para facilitar o movimento na areia. Em dias de frio, você pode usar sapatilhas de neoprene ou botinhas próprias para areia — elas mantêm o pé aquecido sem atrapalhar o jogo."
+    },
+    {
+      "titulo": "Ambiente",
+      "icone": "fas fa-umbrella-beach",
+      "texto": "Nossa estrutura conta com quadras totalmente cobertas, ou seja, nosso treino está garantido, independente do clima lá fora."
+    }
+  ],
+  "endereco": {
+    "titulo": "Endereço das aulas",
+    "texto": "Arena Sun7 Sports — Estrada Municipal Pioneiro Francisco Simionato, Área Rural, Pato Branco - PR, 85513-899",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Arena%20Sun7%20Sports%2C%20Estrada%20Municipal%20Pioneiro%20Francisco%20Simionato%2C%20Pato%20Branco%20-%20PR%2C%2085513-899"
+  }
 };

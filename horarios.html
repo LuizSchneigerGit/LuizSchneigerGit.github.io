@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/img/logo-icone.png">
   <title>Horários de Aula - Luiz Henrique</title>
   <meta name="description" content="Horários das aulas de Beach Tennis com Luiz Henrique. Agende sua aula pelo WhatsApp.">
 
@@ -31,7 +32,10 @@
   <!-- ==================== HEADER ==================== -->
   <header class="header" id="header">
     <nav class="nav container">
-      <a href="index.html" class="nav__logo">Luiz Henrique</a>
+      <a href="index.html" class="nav__logo" aria-label="Luiz Schneiger Beach Tennis">
+        <img src="assets/img/logo-completo.png" alt="Luiz Schneiger Beach Tennis" class="nav__logo-img"
+             onerror="this.replaceWith(document.createTextNode('Luiz Schneiger'))">
+      </a>
       
       <div class="nav__menu" id="nav-menu">
         <ul class="nav__list grid">
@@ -83,7 +87,27 @@
         <!-- O conteúdo será gerado dinamicamente pelo JavaScript -->
       </div>
     </section>
-    
+
+    <!-- ==================== DÚVIDAS ==================== -->
+    <section class="section">
+      <div class="container duvidas">
+        <h2 class="section__title">Ficou com dúvidas?</h2>
+        <span class="section__subtitle">Manda pra mim que eu te respondo no WhatsApp</span>
+
+        <div class="duvidas__box">
+          <textarea id="duvida-texto" class="duvidas__texto" rows="4"
+            placeholder="Escreva sua dúvida aqui (ex: nível das turmas, valores, primeira aula...)"></textarea>
+          <button type="button" id="duvida-enviar" class="duvidas__btn">
+            <i class="fab fa-whatsapp"></i> Enviar dúvida no WhatsApp
+          </button>
+        </div>
+
+        <a href="quem-sou-eu.html" class="duvidas__prof">
+          <i class="fas fa-user"></i> Conheça o professor
+        </a>
+      </div>
+    </section>
+
     <!-- ==================== CONTACT ME ==================== -->
     <section class="contact section" id="contact">
       <h2 class="section__title">Entre em Contato</h2>
@@ -139,7 +163,8 @@
     <div class="footer__bg">
       <div class="footer__container container grid">
         <div>
-          <h1 class="footer__title">Luiz Henrique</h1>
+          <img src="assets/img/logo-completo-branco.png" alt="Luiz Schneiger Beach Tennis" class="footer__logo-img"
+               onerror="this.replaceWith(Object.assign(document.createElement('h1'),{className:'footer__title',textContent:'Luiz Schneiger'}))">
           <span class="footer__subtitle">Atleta e Professor de Beach Tennis</span>
         </div>
         
@@ -185,7 +210,40 @@
   <a href="#" class="scrollup" id="scroll-up">
     <i class="fas fa-arrow-up scrollup__icon"></i>
   </a>
-  
+
+  <!-- ==================== MODAL DE AGENDAMENTO ==================== -->
+  <div class="ag-modal" id="agendamento-modal" aria-hidden="true">
+    <div class="ag-modal__box">
+      <button class="ag-modal__close" id="ag-close" aria-label="Fechar">&times;</button>
+      <h3 class="ag-modal__titulo-h"><i class="fab fa-whatsapp"></i> Agendar aula</h3>
+      <p class="ag-modal__slot">Horário: <strong id="ag-titulo">—</strong></p>
+
+      <label class="ag__campo">
+        <span>Seu nome</span>
+        <input type="text" id="ag-nome" placeholder="Como você se chama?">
+      </label>
+
+      <label class="ag__campo">
+        <span>Seu nível</span>
+        <select id="ag-nivel"><!-- preenchido via JS --></select>
+      </label>
+
+      <div class="ag__campo">
+        <span>Qual seu foco? (pode marcar mais de um)</span>
+        <div class="ag__focos" id="ag-focos"><!-- preenchido via JS --></div>
+      </div>
+
+      <label class="ag__campo">
+        <span>Informações complementares</span>
+        <textarea id="ag-info" rows="3" placeholder="Algo que eu deva saber? (lesões, experiência, preferências...)"></textarea>
+      </label>
+
+      <button type="button" class="ag-modal__enviar" id="ag-enviar">
+        <i class="fab fa-whatsapp"></i> Enviar agendamento no WhatsApp
+      </button>
+    </div>
+  </div>
+
   <!-- ==================== DADOS DOS HORÁRIOS ==================== -->
   <script>
     // Carrega dados + loader sempre frescos (cache-busting) para refletir a última versão publicada.

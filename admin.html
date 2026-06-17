@@ -637,13 +637,12 @@
           box.appendChild(el("div", { class: "row" }, [field("Nome", cu, "nome"), field("Ano", cu, "ano")]));
           box.appendChild(field("Instituição", cu, "instituicao"));
           box.appendChild(field("Descrição", cu, "descricao", { area: true }));
-          box.appendChild(imageField("Imagem (miniatura)", cu, "imagem"));
           cursosWrap.appendChild(box);
         });
       }
       drawCursos();
       ctCard.appendChild(cursosWrap);
-      ctCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { ct.cursos.push({ nome: "", instituicao: "", ano: "", descricao: "", imagem: "" }); drawCursos(); } }, "+ Adicionar curso"));
+      ctCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { ct.cursos.push({ nome: "", instituicao: "", ano: "", descricao: "" }); drawCursos(); } }, "+ Adicionar curso"));
       root.appendChild(ctCard);
 
       // Objetivos futuros (curto/longo prazo)

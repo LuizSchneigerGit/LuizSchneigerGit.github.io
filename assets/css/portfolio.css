@@ -1259,29 +1259,6 @@ img {
   }
 }
 
-/* Miniatura + descrição do curso na linha do tempo (Formação) */
-.qualification__img {
-  display: block;
-  width: 110px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 0.4rem;
-  margin: 0.6rem 0 0.4rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.qualification__img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-}
-.qualification__desc {
-  font-size: var(--small-font-size);
-  color: var(--text-color);
-  line-height: 1.5;
-  max-width: 260px;
-}
-
 /* CERTIFICADOS (galeria) */
 .certificados__grid {
   display: grid;

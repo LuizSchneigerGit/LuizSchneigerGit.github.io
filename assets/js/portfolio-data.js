@@ -86,29 +86,25 @@ const portfolioData = {
         nome: "Módulo CBT Verde",
         instituicao: "Treinamentos BT",
         ano: "2024",
-        descricao: "Fundamentos básicos do beach tennis, incluindo técnicas de saque, voleio e smash, e estratégias simples.",
-        imagem: "assets/img/portfolio1.jpg"
+        descricao: "Fundamentos básicos do beach tennis, incluindo técnicas de saque, voleio e smash, e estratégias simples."
       },
       {
         nome: "Módulo CBT Amarelo",
         instituicao: "Treinamentos BT",
         ano: "2024",
-        descricao: "Técnicas avançadas e estratégias para jogos de dupla, posicionamento e comunicação.",
-        imagem: "assets/img/portfolio2.jpg"
+        descricao: "Técnicas avançadas e estratégias para jogos de dupla, posicionamento e comunicação."
       },
       {
         nome: "Módulo CBT Azul",
         instituicao: "Treinamentos BT",
         ano: "2024",
-        descricao: "Treinamento especializado para competições, condicionamento físico e mental, e estratégias avançadas.",
-        imagem: "assets/img/portfolio3.jpg"
+        descricao: "Treinamento especializado para competições, condicionamento físico e mental, e estratégias avançadas."
       },
       {
         nome: "Curso de Árbitro de Beach Tennis",
         instituicao: "Federação Paranaense de Tênis",
         ano: "2024",
-        descricao: "Regras e procedimentos para arbitrar partidas oficiais.",
-        imagem: "assets/img/about.jpg"
+        descricao: "Regras e procedimentos para arbitrar partidas oficiais."
       }
     ]
   },

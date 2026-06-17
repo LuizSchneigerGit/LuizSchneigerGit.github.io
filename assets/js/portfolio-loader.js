@@ -200,49 +200,6 @@
     }
   });
   
-  // ---- Certificados (galeria + lightbox) ----
-  const certGrid = document.getElementById('certificados-grid');
-  if (certGrid && Array.isArray(portfolioData.certificados)) {
-    certGrid.innerHTML = '';
-    portfolioData.certificados.forEach(function (cert) {
-      const card = document.createElement('a');
-      card.className = 'certificado';
-      card.href = cert.url;
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', 'Ampliar certificado: ' + cert.titulo);
-      const img = document.createElement('img');
-      img.src = cert.url;
-      img.alt = 'Certificado: ' + cert.titulo;
-      img.loading = 'lazy';
-      const cap = document.createElement('span');
-      cap.className = 'certificado__cap';
-      cap.textContent = cert.titulo;
-      card.appendChild(img);
-      card.appendChild(cap);
-      card.addEventListener('click', function (e) { e.preventDefault(); abrirLightbox(cert.url, cert.titulo); });
-      certGrid.appendChild(card);
-    });
-  }
-
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const lightboxClose = document.getElementById('lightbox-close');
-  function abrirLightbox(url, titulo) {
-    if (!lightbox || !lightboxImg) return;
-    lightboxImg.src = url;
-    lightboxImg.alt = 'Certificado: ' + titulo;
-    lightbox.classList.add('is-open');
-    lightbox.setAttribute('aria-hidden', 'false');
-  }
-  function fecharLightbox() {
-    if (!lightbox) return;
-    lightbox.classList.remove('is-open');
-    lightbox.setAttribute('aria-hidden', 'true');
-  }
-  if (lightboxClose) lightboxClose.addEventListener('click', fecharLightbox);
-  if (lightbox) lightbox.addEventListener('click', function (e) { if (e.target === lightbox) fecharLightbox(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fecharLightbox(); });
-
   // Atualizar contato
   document.querySelector('.contact__subtitle').textContent = portfolioData.informacoesBasicas.telefone;
   document.querySelectorAll('.contact__subtitle')[1].textContent = portfolioData.informacoesBasicas.email;

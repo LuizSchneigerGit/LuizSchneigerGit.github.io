@@ -207,6 +207,8 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 44px; /* alvo de toque (WCAG) */
   font-size: var(--small-font-size);
   color: var(--title-color);
   font-weight: var(--font-medium);
@@ -918,7 +920,16 @@ img {
 .footer__links {
   display: flex;
   flex-direction: column;
-  row-gap: 1.5rem;
+  row-gap: 1rem;
+}
+
+/* Alvos de toque (WCAG) para links e botões do rodapé/contato */
+.footer__link,
+.footer__social,
+.contact__button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .footer__link:hover {

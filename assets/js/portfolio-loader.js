@@ -193,6 +193,7 @@
     if (index < testimonialSlides.length) {
       const slide = testimonialSlides[index];
       slide.querySelector('.testimonial__img').src = depoimento.foto;
+      slide.querySelector('.testimonial__img').alt = 'Foto de ' + depoimento.nome;
       slide.querySelector('.testimonial__name').textContent = depoimento.nome;
       slide.querySelector('.testimonial__client').textContent = depoimento.categoria;
       slide.querySelector('.testimonial__description').textContent = depoimento.texto;

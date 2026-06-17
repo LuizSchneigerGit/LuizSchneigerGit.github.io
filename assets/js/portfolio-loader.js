@@ -29,39 +29,30 @@
   
   // Atualizar qualificações
   const educationContent = document.querySelector('#education');
+  function conteudoCurso(curso) {
+    return `
+      <h3 class="qualification__title">${curso.nome}</h3>
+      <span class="qualification__subtitle">${curso.instituicao}</span>
+      <div class="qualification__calendar">
+        <i class="fas fa-calendar-alt"></i>
+        ${curso.ano}
+      </div>
+      ${curso.imagem ? `<img class="qualification__img" src="${curso.imagem}" alt="Certificado ${curso.nome}" loading="lazy">` : ''}
+      ${curso.descricao ? `<p class="qualification__desc">${curso.descricao}</p>` : ''}
+    `;
+  }
   let educationHTML = '';
   portfolioData.cursosTreinamentos.cursos.forEach((curso, index) => {
     const isEven = index % 2 === 0;
+    const marcador = `
+      <div>
+        <span class="qualification__rounder"></span>
+        <span class="qualification__line"></span>
+      </div>`;
     educationHTML += `
       <div class="qualification__data">
-        ${isEven ? `
-          <div>
-            <h3 class="qualification__title">${curso.nome}</h3>
-            <span class="qualification__subtitle">${curso.instituicao}</span>
-            <div class="qualification__calendar">
-              <i class="fas fa-calendar-alt"></i>
-              ${curso.ano}
-            </div>
-          </div>
-          <div>
-            <span class="qualification__rounder"></span>
-            <span class="qualification__line"></span>
-          </div>
-        ` : `
-          <div></div>
-          <div>
-            <span class="qualification__rounder"></span>
-            <span class="qualification__line"></span>
-          </div>
-          <div>
-            <h3 class="qualification__title">${curso.nome}</h3>
-            <span class="qualification__subtitle">${curso.instituicao}</span>
-            <div class="qualification__calendar">
-              <i class="fas fa-calendar-alt"></i>
-              ${curso.ano}
-            </div>
-          </div>
-        `}
+        ${isEven ? `<div class="qualification__col">${conteudoCurso(curso)}</div>${marcador}`
+                 : `<div></div>${marcador}<div class="qualification__col">${conteudoCurso(curso)}</div>`}
       </div>
     `;
   });
@@ -242,6 +233,15 @@
   if (lightboxClose) lightboxClose.addEventListener('click', fecharLightbox);
   if (lightbox) lightbox.addEventListener('click', function (e) { if (e.target === lightbox) fecharLightbox(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fecharLightbox(); });
+
+  // Miniaturas dos cursos (Formação) também ampliam no lightbox
+  const eduEl = document.getElementById('education');
+  if (eduEl) {
+    eduEl.addEventListener('click', function (e) {
+      const t = e.target.closest && e.target.closest('.qualification__img');
+      if (t) abrirLightbox(t.getAttribute('src'), t.getAttribute('alt') || 'Certificado');
+    });
+  }
 
   // Atualizar contato
   document.querySelector('.contact__subtitle').textContent = portfolioData.informacoesBasicas.telefone;

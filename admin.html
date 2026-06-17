@@ -122,6 +122,10 @@
       grid-column: 1 / -1;
     }
     label.field:has(textarea) { grid-column: 1 / -1; }
+    label.field--image { grid-column: 1 / -1; }
+    .img-preview { display: none; max-width: 140px; max-height: 100px; object-fit: cover; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; }
+    .img-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .img-controls input[type=text] { flex: 1; min-width: 160px; }
 
     /* No celular volta para 1 coluna */
     @media (max-width: 640px) {
@@ -198,6 +202,8 @@
       <br>
       O painel sempre carrega a <strong>última versão publicada</strong> dos dados (sem cache). Para continuar
       de uma versão salva no seu computador, use <strong>⬆️ Importar arquivo</strong> e selecione um <code>*-data.js</code>.
+      Nos campos de imagem, use <strong>📷 Enviar imagem</strong> para subir uma foto do PC — ela é redimensionada e
+      embutida no próprio arquivo de dados (não precisa hospedar o arquivo separadamente).
     </div>
 
     <div class="tabs">
@@ -327,6 +333,63 @@
       t.textContent = msg;
       t.classList.add("show");
       setTimeout(function () { t.classList.remove("show"); }, 2200);
+    }
+
+    // Lê uma imagem do PC, redimensiona/comprime e devolve um data URL (base64).
+    function embedImage(file, maxDim, quality, cb) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const img = new Image();
+        img.onload = function () {
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            const s = Math.min(maxDim / w, maxDim / h);
+            w = Math.round(w * s); h = Math.round(h * s);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          cb(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = function () { alert("Não foi possível ler a imagem."); };
+        img.src = reader.result;
+      };
+      reader.onerror = function () { alert("Falha ao abrir o arquivo."); };
+      reader.readAsDataURL(file);
+    }
+
+    // Campo de imagem: URL manual OU upload (embutido em base64). Mostra prévia.
+    function imageField(label, obj, key) {
+      const isData = function () { return obj[key] && String(obj[key]).slice(0, 5) === "data:"; };
+
+      const span = el("span", null, label);
+      const preview = el("img", { class: "img-preview" });
+      const input = el("input", { type: "text", placeholder: "Cole uma URL ou envie uma imagem do PC" });
+      const file = el("input", { type: "file", accept: "image/*", style: "display:none" });
+      const btn = el("button", { type: "button", class: "btn btn-ghost btn-sm",
+        onclick: function () { file.click(); } }, "📷 Enviar imagem");
+
+      function refresh() {
+        if (obj[key]) { preview.src = obj[key]; preview.style.display = "block"; }
+        else { preview.removeAttribute("src"); preview.style.display = "none"; }
+        if (isData()) { input.value = ""; input.placeholder = "✓ imagem embutida — envie outra ou cole uma URL"; }
+        else { input.value = obj[key] || ""; input.placeholder = "Cole uma URL ou envie uma imagem do PC"; }
+      }
+      input.addEventListener("input", function () { obj[key] = input.value; refresh(); });
+      file.addEventListener("change", function () {
+        const f = file.files && file.files[0];
+        if (!f) return;
+        embedImage(f, 1280, 0.82, function (dataUrl) {
+          obj[key] = dataUrl;
+          refresh();
+          toast("Imagem embutida (" + Math.round(dataUrl.length / 1024) + " KB)");
+        });
+        file.value = "";
+      });
+
+      const controls = el("div", { class: "img-controls" }, [input, btn, file]);
+      refresh();
+      return el("label", { class: "field field--image" }, [span, preview, controls]);
     }
 
     // ====================================================
@@ -464,9 +527,9 @@
       ibCard.appendChild(el("div", { class: "row" }, [field("Nome", ib, "nome"), field("Profissão", ib, "profissao")]));
       ibCard.appendChild(el("div", { class: "row" }, [field("E-mail", ib, "email", { type: "email" }), field("Telefone", ib, "telefone")]));
       ibCard.appendChild(field("Instagram", ib, "instagram"));
-      ibCard.appendChild(field("Foto de perfil (URL)", ib, "fotoPerfil", { type: "url" }));
-      ibCard.appendChild(field("Foto hero / banner (URL)", ib, "fotoHero", { type: "url" }));
-      ibCard.appendChild(field("Foto 'Sobre' (URL)", ib, "fotoSobre", { type: "url" }));
+      ibCard.appendChild(imageField("Foto de perfil", ib, "fotoPerfil"));
+      ibCard.appendChild(imageField("Foto hero / banner", ib, "fotoHero"));
+      ibCard.appendChild(imageField("Foto 'Sobre'", ib, "fotoSobre"));
       root.appendChild(ibCard);
 
       // Resumo inicial
@@ -585,7 +648,8 @@
           box.appendChild(el("button", { class: "remove-x", onclick: function () { P.depoimentos.splice(i, 1); drawDep(); } }, "✕"));
           box.appendChild(el("div", { class: "row" }, [field("Nome", d, "nome"), field("Categoria", d, "categoria")]));
           box.appendChild(field("Texto", d, "texto", { area: true }));
-          box.appendChild(el("div", { class: "row" }, [field("Foto (URL)", d, "foto", { type: "url" }), field("Avaliação (1-5)", d, "avaliacao", { number: true, type: "number" })]));
+          box.appendChild(imageField("Foto", d, "foto"));
+          box.appendChild(field("Avaliação (1-5)", d, "avaliacao", { number: true, type: "number" }));
           depWrap.appendChild(box);
         });
       }
@@ -603,7 +667,7 @@
           const box = el("div", { class: "item-box" });
           box.appendChild(el("button", { class: "remove-x", onclick: function () { P.galeria.splice(i, 1); drawGal(); } }, "✕"));
           box.appendChild(field("Título", g, "titulo"));
-          box.appendChild(field("URL da imagem", g, "url", { type: "url" }));
+          box.appendChild(imageField("Imagem", g, "url"));
           box.appendChild(field("Descrição", g, "descricao", { area: true }));
           galWrap.appendChild(box);
         });
@@ -695,7 +759,7 @@
           box.appendChild(el("label", { class: "field" }, [el("span", null, "Categoria"), sel]));
           box.appendChild(el("div", { class: "row" }, [field("Preço em R$ (0 = sob consulta)", p, "preco", { number: true, type: "number" })]));
           box.appendChild(field("Descrição", p, "descricao", { area: true }));
-          box.appendChild(field("Imagem (URL)", p, "imagem", { type: "url" }));
+          box.appendChild(imageField("Imagem", p, "imagem"));
           box.appendChild(checkbox("Marcar como 'Mais procurado' (destaque)", p, "destaque"));
           prodWrap.appendChild(box);
         });

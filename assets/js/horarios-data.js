@@ -82,6 +82,24 @@ const horariosData = {
           "categoria": "categoriaE",
           "disponivel": true,
           "observacao": "2 Vagas, Treino de Casal nível E/D"
+        },
+        {
+          "horario": "17:00",
+          "categoria": "categoriaE",
+          "disponivel": false,
+          "observacao": ""
+        },
+        {
+          "horario": "19:00",
+          "categoria": "categoriaD",
+          "disponivel": false,
+          "observacao": ""
+        },
+        {
+          "horario": "21:00",
+          "categoria": "experimental",
+          "disponivel": true,
+          "observacao": "Horário Livre"
         }
       ]
     },
@@ -105,6 +123,24 @@ const horariosData = {
           "categoria": "experimental",
           "disponivel": true,
           "observacao": "Horário Livre"
+        },
+        {
+          "horario": "21:00",
+          "categoria": "experimental",
+          "disponivel": true,
+          "observacao": "Horário Livre"
+        },
+        {
+          "horario": "19:00",
+          "categoria": "categoriaE",
+          "disponivel": true,
+          "observacao": "1 Vagas, Categoria E/D "
+        },
+        {
+          "horario": "18:00",
+          "categoria": "experimental",
+          "disponivel": true,
+          "observacao": "2 Vagas, Categoria E"
         }
       ]
     }

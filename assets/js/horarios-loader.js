@@ -231,15 +231,17 @@
       });
     }
 
-    // ---- Amigos (máx. 4, só nome) ----
+    // ---- Amigos (limitado às vagas: você + amigos ≤ vagas do horário) ----
     const agAmigos = document.getElementById('ag-amigos');
     const agAddAmigo = document.getElementById('ag-add-amigo');
-    const MAX_AMIGOS = 4;
+    const agAmigosLabel = document.getElementById('ag-amigos-label');
+    let agMaxAmigos = 0;
     function atualizarBtnAmigo() {
-      if (agAddAmigo && agAmigos) agAddAmigo.style.display = (agAmigos.children.length >= MAX_AMIGOS) ? 'none' : '';
+      if (!agAddAmigo || !agAmigos) return;
+      agAddAmigo.style.display = (agMaxAmigos > 0 && agAmigos.children.length < agMaxAmigos) ? '' : 'none';
     }
     function addAmigo() {
-      if (!agAmigos || agAmigos.children.length >= MAX_AMIGOS) return;
+      if (!agAmigos || agAmigos.children.length >= agMaxAmigos) return;
       const row = document.createElement('div');
       row.className = 'ag__amigo';
       const input = document.createElement('input');
@@ -261,7 +263,16 @@
 
     function abrirAgendamento(dia, horario, categoriaChave) {
       agAtual = { dia: dia, horario: horario };
+      // Limite de amigos = vagas do horário - 1 (você ocupa 1 vaga)
+      const aulaSel = buscarAula(dia, horario);
+      const vagas = (aulaSel && aulaSel.vagas !== undefined) ? aulaSel.vagas : 4;
+      agMaxAmigos = Math.max(0, vagas - 1);
       if (agAmigos) agAmigos.innerHTML = '';
+      if (agAmigosLabel) {
+        agAmigosLabel.textContent = agMaxAmigos > 0
+          ? 'Vai levar amigos? (só o nome — até ' + agMaxAmigos + ', somando ' + vagas + ' pessoas)'
+          : 'Este horário tem apenas 1 vaga — sem espaço para acompanhantes.';
+      }
       atualizarBtnAmigo();
       if (agTitulo) agTitulo.textContent = dia + ' às ' + horario;
       if (agNivel && categoriaChave) agNivel.value = categoriaChave;

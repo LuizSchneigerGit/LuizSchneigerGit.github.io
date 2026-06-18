@@ -387,12 +387,23 @@
 }
 .ag__amigo-rm:hover { background: #ffe0e0; color: #e53935; }
 .ag__add-amigo {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  padding: 0.5rem 0.9rem; border: 1px dashed var(--first-color);
-  border-radius: 0.5rem; background: transparent; color: var(--first-color);
-  font-family: var(--body-font); font-size: var(--small-font-size); font-weight: var(--font-medium); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  width: 100%; margin-top: 0.25rem;
+  padding: 0.75rem 1rem; border: none; border-radius: 0.6rem;
+  background: linear-gradient(135deg, var(--first-color), var(--first-color-alt));
+  color: #fff; font-family: var(--body-font); font-size: var(--small-font-size);
+  font-weight: var(--font-semi-bold); cursor: pointer;
+  box-shadow: 0 4px 14px hsla(var(--hue-color), 69%, 45%, 0.30);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
-.ag__add-amigo:hover { background: var(--first-color); color: #fff; }
+.ag__add-amigo i { font-size: 1rem; }
+.ag__add-amigo:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 7px 20px hsla(var(--hue-color), 69%, 45%, 0.42);
+}
+.ag__add-amigo:active { transform: translateY(0); }
+.ag__add-amigo:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .ag__focos { display: flex; flex-direction: column; gap: 0.5rem; }
 .ag__check { display: flex; align-items: center; gap: 0.55rem; cursor: pointer; font-size: var(--small-font-size); color: var(--text-color); }

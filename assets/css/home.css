@@ -40,9 +40,8 @@ img { max-width: 100%; height: auto; display: block; }
 /* Logo da marca no topo */
 .home__logo {
   display: block;
-  max-width: 240px;
-  width: 70%;
-  height: auto;
+  width: auto;
+  height: 96px;
   margin: 0 auto;
 }
 

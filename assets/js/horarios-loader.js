@@ -231,8 +231,38 @@
       });
     }
 
+    // ---- Amigos (máx. 4, só nome) ----
+    const agAmigos = document.getElementById('ag-amigos');
+    const agAddAmigo = document.getElementById('ag-add-amigo');
+    const MAX_AMIGOS = 4;
+    function atualizarBtnAmigo() {
+      if (agAddAmigo && agAmigos) agAddAmigo.style.display = (agAmigos.children.length >= MAX_AMIGOS) ? 'none' : '';
+    }
+    function addAmigo() {
+      if (!agAmigos || agAmigos.children.length >= MAX_AMIGOS) return;
+      const row = document.createElement('div');
+      row.className = 'ag__amigo';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Nome do amigo';
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'ag__amigo-rm';
+      rm.setAttribute('aria-label', 'Remover amigo');
+      rm.innerHTML = '&times;';
+      rm.addEventListener('click', function () { row.remove(); atualizarBtnAmigo(); });
+      row.appendChild(input);
+      row.appendChild(rm);
+      agAmigos.appendChild(row);
+      input.focus();
+      atualizarBtnAmigo();
+    }
+    if (agAddAmigo) agAddAmigo.addEventListener('click', addAmigo);
+
     function abrirAgendamento(dia, horario, categoriaChave) {
       agAtual = { dia: dia, horario: horario };
+      if (agAmigos) agAmigos.innerHTML = '';
+      atualizarBtnAmigo();
       if (agTitulo) agTitulo.textContent = dia + ' às ' + horario;
       if (agNivel && categoriaChave) agNivel.value = categoriaChave;
       if (agFocos) agFocos.querySelectorAll('input').forEach(i => { i.checked = false; });
@@ -254,11 +284,18 @@
       const nivelNome = agNivel ? (grid.categorias[agNivel.value] ? grid.categorias[agNivel.value].nome : agNivel.value) : '';
       const focos = agFocos ? Array.prototype.slice.call(agFocos.querySelectorAll('input:checked')).map(i => i.value) : [];
       const info = (document.getElementById('ag-info') || {}).value || '';
+      const amigos = agAmigos
+        ? Array.prototype.slice.call(agAmigos.querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean)
+        : [];
       let msg = (contato.mensagemPadrao || 'Olá! Quero agendar uma aula de Beach Tennis.') + '\n\n';
       msg += '*Dia/horário:* ' + agAtual.dia + ' às ' + agAtual.horario + '\n';
       msg += '*Nível:* ' + nivelNome + '\n';
       if (focos.length) msg += '*Foco:* ' + focos.join(', ') + '\n';
       if (nome.trim()) msg += '*Nome:* ' + nome.trim() + '\n';
+      if (amigos.length) {
+        msg += '*Amigos:* ' + amigos.join(', ') + '\n';
+        msg += '*Total de pessoas:* ' + (1 + amigos.length) + '\n';
+      }
       if (info.trim()) msg += '*Mais informações:* ' + info.trim() + '\n';
       window.open(waUrl(msg), '_blank', 'noopener');
       fecharAgendamento();

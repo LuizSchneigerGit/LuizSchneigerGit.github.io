@@ -38,11 +38,29 @@ body {
 img { max-width: 100%; height: auto; display: block; }
 
 /* Logo da marca no topo */
-.home__logo {
-  display: block;
-  width: auto;
-  height: 96px;
-  margin: 0 auto;
+/* Marca: ícone + wordmark (texto HTML, sem caixa) */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+.brand__icon { height: 64px; width: auto; flex-shrink: 0; }
+.brand__text { display: flex; flex-direction: column; line-height: 1.04; }
+.brand__name {
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #2e8be6;
+  margin: 0;
+}
+.brand__tag {
+  align-self: flex-end;
+  font-size: clamp(0.7rem, 2.6vw, 0.86rem);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  font-weight: 500;
+  color: var(--text);
 }
 
 /* Cartão central (linktree) */

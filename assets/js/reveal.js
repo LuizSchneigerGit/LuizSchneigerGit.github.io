@@ -14,9 +14,12 @@
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   // Cards/containers que recebem o efeito como bloco (com deslocamento)
-  const CARD_SEL = '.loja__card, .horarios__card, .services__content, .project__img';
-  // Blocos de carrossel: fade só de opacidade, sem transform (não quebra o Swiper)
-  const SOFT_SEL = '.portfolio__container, .testimonial__container';
+  const CARD_SEL = '.loja__card, .horarios__card, .project__img';
+  // Fade só de opacidade, sem transform. Inclui blocos de carrossel (Swiper) e
+  // o .services__content — este tem um .services__modal (position: fixed) como
+  // filho; um transform/will-change no card o tornaria bloco de contenção do
+  // modal e faria o popup piscar.
+  const SOFT_SEL = '.portfolio__container, .testimonial__container, .services__content';
   // Tudo que deve ser observado
   const ALL_SEL = 'img, ' + CARD_SEL + ', ' + SOFT_SEL;
 

@@ -684,9 +684,11 @@ img {
   transition: all 0.3s ease;
 }
 
+/* Sem transform aqui: o .services__modal (position: fixed) é filho do card.
+   Um transform no ancestral tornaria o card o bloco de contenção do modal,
+   fazendo o popup piscar/saltar ao passar o mouse. Mantemos só a sombra. */
 .services__content:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  transform: translateY(-5px);
 }
 
 .services__icon {

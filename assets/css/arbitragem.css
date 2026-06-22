@@ -207,6 +207,29 @@
   color: var(--title-color);
   white-space: nowrap;
 }
+.arb__dia-extra {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+.arb__dia-ag {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--smaller-font-size);
+  color: var(--text-color-light);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.arb__dia-ag input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--first-color);
+  cursor: pointer;
+}
+.arb__dia--sem-aux .arb__dia-aux { opacity: 0.55; font-style: italic; }
+.arb__dia--sem-aux .arb__dia-quadras { opacity: 0.5; }
 
 /* ---- Checkbox ---- */
 .arb__check {

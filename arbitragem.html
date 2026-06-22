@@ -17,10 +17,10 @@
   <meta property="og:site_name" content="Luiz Schneiger - Beach Tennis">
   <meta property="og:title" content="Calculadora de Arbitragem — Beach Tennis (FPT 2026)">
   <meta property="og:description" content="Calcule diárias de arbitragem, auxiliares, deslocamento e gere o recibo. Baseado na tabela FPT 2026.">
-  <meta property="og:url" content="https://luizschneigergit.github.io/arbitragem.html">
-  <meta property="og:image" content="https://luizschneigergit.github.io/assets/img/hero.jpg">
+  <meta property="og:url" content="https://luizschneigerbt.com.br/arbitragem.html">
+  <meta property="og:image" content="https://luizschneigerbt.com.br/assets/img/hero.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://luizschneigergit.github.io/assets/img/hero.jpg">
+  <meta name="twitter:image" content="https://luizschneigerbt.com.br/assets/img/hero.jpg">
 
   <!-- ==================== FONTES ==================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,7 +123,7 @@
 
           <div class="arb__grupo">
             <h3 class="arb__grupo-titulo"><i class="fas fa-table-cells-large"></i> Quadras por dia</h3>
-            <p class="arb__hint" style="margin-bottom:.75rem">1 auxiliar a cada 4 quadras (mínimo 1). Os dias vêm do período acima.</p>
+            <p class="arb__hint" style="margin-bottom:.75rem">1 auxiliar a cada 4 quadras (mínimo 1). Os dias vêm do período acima. O Árbitro Geral é cobrado em todos os dias; desmarque "Árbitro Auxiliar" para não cobrar auxiliares naquele dia.</p>
             <div id="arb-dias" class="arb__dias"><!-- dias dinâmicos --></div>
           </div>
 
@@ -149,14 +149,12 @@
                 <input class="arb__input" type="number" id="arb-km" min="0" step="0.1" value="0">
               </div>
               <div class="arb__campo">
+                <label class="arb__label" for="arb-ida-volta-qtd">Idas e voltas <span class="arb__hint">(1 = ida e volta completa)</span></label>
+                <input class="arb__input" type="number" id="arb-ida-volta-qtd" min="0" step="1" value="1">
+              </div>
+              <div class="arb__campo">
                 <label class="arb__label" for="arb-pedagios">Pedágios por dia (R$)</label>
                 <input class="arb__input" type="number" id="arb-pedagios" min="0" step="0.01" value="0">
-              </div>
-              <div class="arb__campo arb__campo--full">
-                <label class="arb__check">
-                  <input type="checkbox" id="arb-ida-volta" checked>
-                  <span>Ida e volta (dobra a distância)</span>
-                </label>
               </div>
             </div>
           </div>

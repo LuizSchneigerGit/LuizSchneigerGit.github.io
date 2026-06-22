@@ -37,16 +37,23 @@
 
     var dias = inp.dias || [];
     var numDias = dias.length;
+
+    // Árbitro Geral é fixo: conta em todos os dias do torneio.
     var totalAG = diariaAG * numDias;
 
+    // Árbitro Auxiliar é opcional por dia (checkbox). Dia desmarcado = 0 auxiliares.
     var auxPorDia = dias.map(function (d) {
+      if (d.arbitroAuxiliar === false) return 0;
       return auxiliaresPorQuadras(d.quadras, data.quadrasPorAuxiliar);
     });
     var totalAuxDiarias = auxPorDia.reduce(function (a, b) { return a + b; }, 0);
     var totalAux = data.valorArbitroAuxiliar * totalAuxDiarias;
 
-    // Deslocamento por dia (o trajeto se repete a cada dia do torneio) × nº de dias
-    var kmEf = (Number(inp.km) || 0) * (inp.idaEVolta ? 2 : 1);
+    // Deslocamento por dia (o trajeto se repete a cada dia do torneio) × nº de dias.
+    // "Idas e voltas" é numérico: cada unidade = 1 ida e volta completa (2 × km de ida).
+    var voltas = Number(inp.idasVoltas);
+    if (isNaN(voltas) || voltas < 0) voltas = 0;
+    var kmEf = (Number(inp.km) || 0) * 2 * voltas;
     var deslocamentoPorDia = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
     var deslocamento = deslocamentoPorDia * numDias;
 
@@ -60,7 +67,7 @@
     return {
       faixa: faixa, diariaAG: diariaAG, numDias: numDias, totalAG: totalAG,
       auxPorDia: auxPorDia, totalAuxDiarias: totalAuxDiarias, totalAux: totalAux,
-      kmEf: kmEf, deslocamentoPorDia: deslocamentoPorDia, deslocamento: deslocamento,
+      voltas: voltas, kmEf: kmEf, deslocamentoPorDia: deslocamentoPorDia, deslocamento: deslocamento,
       alimentacao: alimentacao, totalFinal: totalFinal
     };
   }
@@ -76,13 +83,14 @@
     L.push("Arbitragem Auxiliar: " + data.valorArbitroAuxiliar + " x " + c.totalAuxDiarias + " diária(s) = " + money(c.totalAux));
     if (inp.dias && inp.dias.length) {
       var det = inp.dias.map(function (d, i) {
-        return (d.label || ("Dia " + (i + 1))) + ": " + c.auxPorDia[i] + " aux/" + (Number(d.quadras) || 0) + "q";
+        return (d.label || ("Dia " + (i + 1))) + ": " +
+          (d.arbitroAuxiliar === false ? "sem aux" : (c.auxPorDia[i] + " aux/" + (Number(d.quadras) || 0) + "q"));
       }).join("  |  ");
       L.push("  (" + det + ")");
     }
     L.push("Deslocamento: " + money(c.deslocamentoPorDia) + "/dia x " + c.numDias + " dia(s) = " + money(c.deslocamento));
-    L.push("  (" + (Number(inp.km) || 0) + " km" + (inp.idaEVolta ? " ida e volta" : "") +
-      " x " + km1(data.valorKm) + " + pedágios/dia " + money(inp.pedagios || 0) + ")");
+    L.push("  (" + (Number(inp.km) || 0) + " km ida x 2 x " + c.voltas + " (ida/volta) = " + km1(c.kmEf) +
+      " km x " + km1(data.valorKm) + " + pedágios/dia " + money(inp.pedagios || 0) + ")");
     if (c.alimentacao > 0) {
       L.push("Alimentação: " + inp.refeicoesPorDia + " ref/dia x " + money(inp.valorRefeicao) +
         " x " + c.numDias + " dia(s) = " + money(c.alimentacao));
@@ -118,8 +126,9 @@
     // Default do valor da refeição (quantidade é fixa = data.refeicoesPorDiaPadrao)
     if ($("arb-valor-refeicao") && !$("arb-valor-refeicao").value) $("arb-valor-refeicao").value = data.valorRefeicaoSugerido;
 
-    // Estado das quadras por data (preserva valores ao mudar o período)
+    // Estado das quadras / Árbitro Auxiliar por data (preserva valores ao mudar o período)
     var quadrasPorData = {};
+    var auxAtivoPorData = {};
 
     function num(id) {
       var el = $(id); if (!el) return 0;
@@ -160,9 +169,11 @@
         var iso = isoData(d);
         var valor = (iso in quadrasPorData) ? quadrasPorData[iso] : 4;
         quadrasPorData[iso] = valor;
+        var temAux = (iso in auxAtivoPorData) ? auxAtivoPorData[iso] : true;
+        auxAtivoPorData[iso] = temAux;
 
         var row = document.createElement("div");
-        row.className = "arb__dia";
+        row.className = "arb__dia" + (temAux ? "" : " arb__dia--sem-aux");
 
         var lbl = document.createElement("span");
         lbl.className = "arb__dia-data";
@@ -182,17 +193,44 @@
         function refresh() {
           var q = parseInt(inp.value, 10); if (isNaN(q) || q < 0) q = 0;
           quadrasPorData[iso] = q;
-          var n = ArbitragemCalc.auxiliaresPorQuadras(q, data.quadrasPorAuxiliar);
-          aux.textContent = n + (n === 1 ? " auxiliar" : " auxiliares");
+          if (auxAtivoPorData[iso] === false) {
+            aux.textContent = "sem auxiliar";
+          } else {
+            var n = ArbitragemCalc.auxiliaresPorQuadras(q, data.quadrasPorAuxiliar);
+            aux.textContent = n + (n === 1 ? " auxiliar" : " auxiliares");
+          }
         }
         inp.addEventListener("input", function () { refresh(); atualizar(); });
+
+        // Lado direito: nº de auxiliares + checkbox "Árbitro Auxiliar" do dia
+        var extra = document.createElement("div");
+        extra.className = "arb__dia-extra";
+        var auxLbl = document.createElement("label");
+        auxLbl.className = "arb__dia-ag";
+        var auxChk = document.createElement("input");
+        auxChk.type = "checkbox"; auxChk.checked = temAux;
+        var auxTxt = document.createElement("span");
+        auxTxt.textContent = "Árbitro Auxiliar";
+        auxChk.addEventListener("change", function () {
+          auxAtivoPorData[iso] = auxChk.checked;
+          row.classList.toggle("arb__dia--sem-aux", !auxChk.checked);
+          inp.disabled = !auxChk.checked;
+          refresh();
+          atualizar();
+        });
+        auxLbl.appendChild(auxChk);
+        auxLbl.appendChild(auxTxt);
+        extra.appendChild(aux);
+        extra.appendChild(auxLbl);
+
+        inp.disabled = !temAux;
         refresh();
 
         grp.appendChild(cap);
         grp.appendChild(inp);
         row.appendChild(lbl);
         row.appendChild(grp);
-        row.appendChild(aux);
+        row.appendChild(extra);
         cont.appendChild(row);
       });
     }
@@ -200,7 +238,11 @@
     function lerEntrada() {
       var dias = listaDias().map(function (d) {
         var iso = isoData(d);
-        return { label: labelData(d), quadras: (iso in quadrasPorData) ? quadrasPorData[iso] : 4 };
+        return {
+          label: labelData(d),
+          quadras: (iso in quadrasPorData) ? quadrasPorData[iso] : 4,
+          arbitroAuxiliar: (iso in auxAtivoPorData) ? auxAtivoPorData[iso] : true
+        };
       });
       var periodoLabel = dias.length ? (dias[0].label + " a " + dias[dias.length - 1].label) : "";
       return {
@@ -209,7 +251,7 @@
         dias: dias,
         periodoLabel: periodoLabel,
         km: num("arb-km"),
-        idaEVolta: $("arb-ida-volta").checked,
+        idasVoltas: num("arb-ida-volta-qtd"),
         pedagios: num("arb-pedagios"),
         incluirAlimentacao: $("arb-incluir-alimentacao").checked,
         refeicoesPorDia: data.refeicoesPorDiaPadrao, // fixo (2)

@@ -88,9 +88,9 @@
       }).join("  |  ");
       L.push("  (" + det + ")");
     }
-    L.push("Deslocamento: " + money(c.custoPorIdaVolta) + " x " + c.voltas + " ida(s) e volta(s) = " + money(c.deslocamento));
-    L.push("  (" + (Number(inp.km) || 0) + " km ida x 2 = " + km1(c.kmEf) +
-      " km x " + km1(data.valorKm) + " + pedágios " + money(inp.pedagios || 0) + " por ida/volta)");
+    L.push("Deslocamento: " + money(c.custoPorIdaVolta) + "/dia x " + c.voltas + " dia(s) = " + money(c.deslocamento));
+    L.push("  (" + (Number(inp.km) || 0) + " km x 2 (ida/volta) = " + km1(c.kmEf) +
+      " km/dia x " + c.voltas + " dia(s) + pedágios/dia " + money(inp.pedagios || 0) + ")");
     if (c.alimentacao > 0) {
       L.push("Alimentação: " + inp.refeicoesPorDia + " ref/dia x " + money(inp.valorRefeicao) +
         " x " + c.numDias + " dia(s) = " + money(c.alimentacao));
@@ -285,7 +285,7 @@
         resumo.appendChild(linha(c.faixa.label, ArbitragemCalc.money(c.diariaAG) + "/dia", false));
         resumo.appendChild(linha("Árbitro Geral (" + c.numDias + " dia(s))", ArbitragemCalc.money(c.totalAG), false));
         resumo.appendChild(linha("Auxiliares (" + c.totalAuxDiarias + " diária(s))", ArbitragemCalc.money(c.totalAux), false));
-        resumo.appendChild(linha("Deslocamento (" + ArbitragemCalc.money(c.custoPorIdaVolta) + " × " + c.voltas + " ida/volta)", ArbitragemCalc.money(c.deslocamento), false));
+        resumo.appendChild(linha("Deslocamento (" + ArbitragemCalc.money(c.custoPorIdaVolta) + "/dia × " + c.voltas + " dia(s))", ArbitragemCalc.money(c.deslocamento), false));
         if (inp.incluirAlimentacao) {
           resumo.appendChild(linha("Alimentação (" + inp.refeicoesPorDia + " ref/dia × " + c.numDias + ")", ArbitragemCalc.money(c.alimentacao), false));
         }

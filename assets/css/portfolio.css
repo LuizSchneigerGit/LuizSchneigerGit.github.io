@@ -1032,10 +1032,8 @@ img {
   padding: 1.5rem 1rem 0.5rem;
 }
 
-/* Espaço entre o título e o primeiro campo, para a etiqueta "Nome"
-   (posicionada acima do input) não sobrepor o título. */
 .contact__title-form {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 .contact__label {
@@ -1077,55 +1075,52 @@ img {
   transform: translateX(0.25rem);
 }
 
+/* Layout empilhado: rótulo em cima, campo embaixo (sem etiqueta sobreposta). */
 .contact__form-div {
-  position: relative;
-  margin-bottom: var(--mb-2);
-  height: 4rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--mb-1-5);
+}
+
+.contact__form-tag {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: var(--small-font-size);
+  font-weight: var(--font-medium);
+  color: var(--title-color);
+  transition: color 0.3s ease;
 }
 
 .contact__form-input {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
   border: 2px solid var(--text-color-light);
-  background: none;
+  background-color: var(--container-color);
   color: var(--text-color);
   outline: none;
   border-radius: 0.75rem;
-  padding: 1.5rem;
-  z-index: 1;
+  padding: 0.9rem 1rem;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
   transition: border-color 0.3s ease;
+}
+
+.contact__form-input::placeholder {
+  color: var(--text-color-light);
+  font-family: var(--body-font);
 }
 
 .contact__form-input:focus {
   border-color: var(--first-color);
 }
 
-.contact__form-tag {
-  position: absolute;
-  top: -0.75rem;
-  left: 1.25rem;
-  font-size: var(--smaller-font-size);
-  padding: 0.25rem;
-  /* Mesma cor do painel (.contact__content) para a "etiqueta" virar um entalhe
-     limpo na borda, em vez de um retângulo branco sobre o fundo azul. */
-  background-color: var(--input-color);
-  z-index: 10;
-  transition: color 0.3s ease;
-}
-
-.contact__form-input:focus + .contact__form-tag {
+/* Destaca o rótulo quando o campo está focado (rótulo vem antes do input). */
+.contact__form-div:focus-within .contact__form-tag {
   color: var(--first-color);
 }
 
-.contact__form-area {
-  height: 11rem;
-}
-
 .contact__form-area textarea {
-  resize: none;
+  min-height: 11rem;
+  resize: vertical;
 }
 
 /* FOOTER */

@@ -1029,7 +1029,13 @@ img {
 .contact__content {
   background-color: var(--input-color);
   border-radius: 0.5rem;
-  padding: 0.75rem 1rem 0.25rem;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+/* Espaço entre o título e o primeiro campo, para a etiqueta "Nome"
+   (posicionada acima do input) não sobrepor o título. */
+.contact__title-form {
+  margin-bottom: 2rem;
 }
 
 .contact__label {
@@ -1103,7 +1109,9 @@ img {
   left: 1.25rem;
   font-size: var(--smaller-font-size);
   padding: 0.25rem;
-  background-color: var(--body-color);
+  /* Mesma cor do painel (.contact__content) para a "etiqueta" virar um entalhe
+     limpo na borda, em vez de um retângulo branco sobre o fundo azul. */
+  background-color: var(--input-color);
   z-index: 10;
   transition: color 0.3s ease;
 }

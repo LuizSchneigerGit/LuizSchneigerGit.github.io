@@ -129,7 +129,7 @@
   // ---------- DOM (só no navegador) ----------
   if (typeof document === "undefined") return;
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function initDOM() {
     if (typeof arbitragemData === "undefined") return;
     var data = arbitragemData;
     var $ = function (id) { return document.getElementById(id); };
@@ -392,5 +392,13 @@
     montarDias();
     montarAlimentacao();
     atualizar();
-  });
+  }
+
+  // Roda já se o DOM estiver pronto (suporta injeção dinâmica/cache-busting),
+  // ou aguarda o DOMContentLoaded.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDOM);
+  } else {
+    initDOM();
+  }
 })(typeof window !== "undefined" ? window : globalThis);

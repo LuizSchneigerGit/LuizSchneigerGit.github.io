@@ -57,9 +57,22 @@
     var custoPorIdaVolta = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
     var deslocamento = custoPorIdaVolta * voltas;
 
+    // Alimentação: nº de pessoas por dia = Árbitro Geral (1) + auxiliares do dia.
+    // "Dia todo" = refeicoesPorDiaPadrao (2 refeições); "Meio dia" = 1 refeição.
+    var diaTodoRefs = data.refeicoesPorDiaPadrao || 2;
+    var valorRef = Number(inp.valorRefeicao) || 0;
+    var alimDetalhe = dias.map(function (d, i) {
+      var pessoas = 1 + auxPorDia[i];
+      var refs = (d.periodo === "meio") ? 1 : diaTodoRefs;
+      return {
+        label: d.label, pessoas: pessoas, refs: refs,
+        periodo: (d.periodo === "meio") ? "meio" : "todo",
+        custoDia: pessoas * refs * valorRef
+      };
+    });
     var alimentacao = 0;
     if (inp.incluirAlimentacao) {
-      alimentacao = (Number(inp.refeicoesPorDia) || 0) * (Number(inp.valorRefeicao) || 0) * numDias;
+      alimentacao = alimDetalhe.reduce(function (a, d) { return a + d.custoDia; }, 0);
     }
 
     var totalFinal = totalAG + totalAux + deslocamento + alimentacao;
@@ -68,7 +81,7 @@
       faixa: faixa, diariaAG: diariaAG, numDias: numDias, totalAG: totalAG,
       auxPorDia: auxPorDia, totalAuxDiarias: totalAuxDiarias, totalAux: totalAux,
       voltas: voltas, kmEf: kmEf, custoPorIdaVolta: custoPorIdaVolta, deslocamento: deslocamento,
-      alimentacao: alimentacao, totalFinal: totalFinal
+      alimDetalhe: alimDetalhe, alimentacao: alimentacao, totalFinal: totalFinal
     };
   }
 
@@ -92,8 +105,12 @@
     L.push("  (" + (Number(inp.km) || 0) + " km x 2 (ida/volta) = " + km1(c.kmEf) +
       " km/dia x " + c.voltas + " dia(s) + pedágios/dia " + money(inp.pedagios || 0) + ")");
     if (c.alimentacao > 0) {
-      L.push("Alimentação: " + inp.refeicoesPorDia + " ref/dia x " + money(inp.valorRefeicao) +
-        " x " + c.numDias + " dia(s) = " + money(c.alimentacao));
+      var totRefs = c.alimDetalhe.reduce(function (a, d) { return a + d.pessoas * d.refs; }, 0);
+      L.push("Alimentação: " + totRefs + " refeição(ões) x " + money(inp.valorRefeicao) + " = " + money(c.alimentacao));
+      var detAlim = c.alimDetalhe.map(function (d) {
+        return d.label + ": " + d.pessoas + "p x " + d.refs + " ref (" + (d.periodo === "meio" ? "meio dia" : "dia todo") + ")";
+      }).join("  |  ");
+      L.push("  (" + detAlim + ")");
     }
     L.push("Total Arbitragem: " + money(c.totalFinal));
     L.push(data.arbitro.nome);
@@ -126,9 +143,11 @@
     // Default do valor da refeição (quantidade é fixa = data.refeicoesPorDiaPadrao)
     if ($("arb-valor-refeicao") && !$("arb-valor-refeicao").value) $("arb-valor-refeicao").value = data.valorRefeicaoSugerido;
 
-    // Estado das quadras / Árbitro Auxiliar por data (preserva valores ao mudar o período)
+    // Estado das quadras / Árbitro Auxiliar / período de alimentação por data
     var quadrasPorData = {};
     var auxAtivoPorData = {};
+    var periodoPorData = {}; // "todo" | "meio"
+    var alimRows = [];
 
     function num(id) {
       var el = $(id); if (!el) return 0;
@@ -241,7 +260,8 @@
         return {
           label: labelData(d),
           quadras: (iso in quadrasPorData) ? quadrasPorData[iso] : 4,
-          arbitroAuxiliar: (iso in auxAtivoPorData) ? auxAtivoPorData[iso] : true
+          arbitroAuxiliar: (iso in auxAtivoPorData) ? auxAtivoPorData[iso] : true,
+          periodo: (iso in periodoPorData) ? periodoPorData[iso] : "todo"
         };
       });
       var periodoLabel = dias.length ? (dias[0].label + " a " + dias[dias.length - 1].label) : "";
@@ -254,7 +274,6 @@
         idasVoltas: num("arb-ida-volta-qtd"),
         pedagios: num("arb-pedagios"),
         incluirAlimentacao: $("arb-incluir-alimentacao").checked,
-        refeicoesPorDia: data.refeicoesPorDiaPadrao, // fixo (2)
         valorRefeicao: num("arb-valor-refeicao")
       };
     }
@@ -287,17 +306,70 @@
         resumo.appendChild(linha("Auxiliares (" + c.totalAuxDiarias + " diária(s))", ArbitragemCalc.money(c.totalAux), false));
         resumo.appendChild(linha("Deslocamento (" + ArbitragemCalc.money(c.custoPorIdaVolta) + "/dia × " + c.voltas + " dia(s))", ArbitragemCalc.money(c.deslocamento), false));
         if (inp.incluirAlimentacao) {
-          resumo.appendChild(linha("Alimentação (" + inp.refeicoesPorDia + " ref/dia × " + c.numDias + ")", ArbitragemCalc.money(c.alimentacao), false));
+          var totRefs = c.alimDetalhe.reduce(function (a, d) { return a + d.pessoas * d.refs; }, 0);
+          resumo.appendChild(linha("Alimentação (" + totRefs + " refeições)", ArbitragemCalc.money(c.alimentacao), false));
         }
         resumo.appendChild(linha("Total Final", ArbitragemCalc.money(c.totalFinal), true));
       }
 
+      // Atualiza pessoas/custo por dia na seção de alimentação (depende dos auxiliares)
+      alimRows.forEach(function (r, i) {
+        var d = c.alimDetalhe[i];
+        if (r.info && d) {
+          r.info.textContent = d.pessoas + (d.pessoas === 1 ? " pessoa · " : " pessoas · ") + ArbitragemCalc.money(d.custoDia);
+        }
+      });
+
       $("arb-recibo").value = ArbitragemCalc.gerarRecibo(inp, c, data);
     }
 
+    // (Re)constrói os seletores "Dia todo / Meio dia" da alimentação, um por dia.
+    function montarAlimentacao() {
+      var cont = $("arb-alim-dias");
+      if (!cont) return;
+      cont.innerHTML = "";
+      alimRows = [];
+      var dias = listaDias();
+      if (dias.length === 0) {
+        cont.innerHTML = '<p class="arb__dias-vazio">Informe as datas para configurar a alimentação.</p>';
+        return;
+      }
+      dias.forEach(function (d) {
+        var iso = isoData(d);
+        var per = (iso in periodoPorData) ? periodoPorData[iso] : "todo";
+        periodoPorData[iso] = per;
+
+        var row = document.createElement("div");
+        row.className = "arb__dia";
+
+        var lbl = document.createElement("span");
+        lbl.className = "arb__dia-data";
+        lbl.textContent = labelData(d);
+
+        var sel = document.createElement("select");
+        sel.className = "arb__input arb__alim-sel";
+        [["todo", "Dia todo (2 ref)"], ["meio", "Meio dia (1 ref)"]].forEach(function (o) {
+          var opt = document.createElement("option");
+          opt.value = o[0]; opt.textContent = o[1];
+          if (o[0] === per) opt.selected = true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener("change", function () { periodoPorData[iso] = sel.value; atualizar(); });
+
+        var info = document.createElement("span");
+        info.className = "arb__dia-aux";
+
+        row.appendChild(lbl);
+        row.appendChild(sel);
+        row.appendChild(info);
+        cont.appendChild(row);
+        alimRows.push({ iso: iso, info: info });
+      });
+    }
+
     // Recalcula quando as datas mudam (reconstrói os dias) e em qualquer input
-    $("arb-data-inicio").addEventListener("change", function () { montarDias(); atualizar(); });
-    $("arb-data-fim").addEventListener("change", function () { montarDias(); atualizar(); });
+    $("arb-data-inicio").addEventListener("change", function () { montarDias(); montarAlimentacao(); atualizar(); });
+    $("arb-data-fim").addEventListener("change", function () { montarDias(); montarAlimentacao(); atualizar(); });
     form.addEventListener("input", atualizar);
     form.addEventListener("submit", function (e) { e.preventDefault(); atualizar(); });
 
@@ -318,6 +390,7 @@
     });
 
     montarDias();
+    montarAlimentacao();
     atualizar();
   });
 })(typeof window !== "undefined" ? window : globalThis);

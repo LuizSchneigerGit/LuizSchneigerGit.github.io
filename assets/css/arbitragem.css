@@ -230,6 +230,7 @@
 }
 .arb__dia--sem-aux .arb__dia-aux { opacity: 0.55; font-style: italic; }
 .arb__dia--sem-aux .arb__dia-quadras { opacity: 0.5; }
+.arb__alim-sel { padding: 0.45rem 0.5rem; min-width: 0; }
 
 /* ---- Checkbox ---- */
 .arb__check {

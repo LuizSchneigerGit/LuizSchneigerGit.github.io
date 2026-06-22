@@ -151,6 +151,9 @@
             <p class="home__description">
               Atleta e professor de beach tennis com uma base sólida em tênis, destacando-me pela evolução rápida e dedicação ao esporte.
             </p>
+            <p class="home__sponsor">
+              <i class="fas fa-handshake"></i> Patrocinador oficial: <strong>Ama Sport</strong>
+            </p>
             <a href="#contact" class="button button--flex">
               Entre em contato <i class="fas fa-paper-plane button__icon"></i>
             </a>
@@ -190,18 +193,18 @@
           
           <div class="about__info">
             <div>
-              <span class="about__info-title">35+</span>
-              <span class="about__info-name">Alunos <br> ativos</span>
+              <span class="about__info-title">2,5</span>
+              <span class="about__info-name">Anos no <br> Beach Tennis</span>
             </div>
-            
+
             <div>
-              <span class="about__info-title">10ª</span>
-              <span class="about__info-name">Posição <br> Ranking Regional</span>
+              <span class="about__info-title">14º</span>
+              <span class="about__info-name">Ranking <br> Estadual (Cat. C)</span>
             </div>
-            
+
             <div>
-              <span class="about__info-title">03+</span>
-              <span class="about__info-name">Torneios <br> vencidos</span>
+              <span class="about__info-title">FPT 2000</span>
+              <span class="about__info-name">Título <br> (Cat. B)</span>
             </div>
           </div>
           
@@ -373,97 +376,6 @@
           
           <img src="assets/img/hero.jpg" alt="Aula de Beach Tennis na arena" class="project__img" loading="lazy">
         </div>
-      </div>
-    </section>
-    
-    <!-- ==================== TESTIMONIAL ==================== -->
-    <section class="testimonial section">
-      <h2 class="section__title">Depoimentos</h2>
-      <span class="section__subtitle">O que meus alunos dizem</span>
-      
-      <div class="testimonial__container container swiper">
-        <div class="swiper-wrapper">
-          <!-- Testimonial 1 -->
-          <div class="testimonial__content swiper-slide">
-            <div class="testimonial__data">
-              <div class="testimonial__header">
-                <img src="assets/img/profile.jpg" alt="Foto de aluno - depoimento" class="testimonial__img" loading="lazy">
-                
-                <div>
-                  <h3 class="testimonial__name">Carlos Silva</h3>
-                  <span class="testimonial__client">Aluno - Categoria C</span>
-                </div>
-              </div>
-              
-              <div>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-              </div>
-            </div>
-            
-            <p class="testimonial__description">
-              As aulas com o Luiz transformaram meu jogo. Em poucos meses, evoluí muito tecnicamente e consegui subir de categoria. Recomendo a todos!
-            </p>
-          </div>
-          
-          <!-- Testimonial 2 -->
-          <div class="testimonial__content swiper-slide">
-            <div class="testimonial__data">
-              <div class="testimonial__header">
-                <img src="assets/img/profile.jpg" alt="Foto de aluna - depoimento" class="testimonial__img" loading="lazy">
-                
-                <div>
-                  <h3 class="testimonial__name">Ana Oliveira</h3>
-                  <span class="testimonial__client">Aluna - Iniciante</span>
-                </div>
-              </div>
-              
-              <div>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-              </div>
-            </div>
-            
-            <p class="testimonial__description">
-              Comecei do zero com o Luiz e em poucas aulas já estava jogando com confiança. A didática dele é excelente, explica tudo com muita paciência.
-            </p>
-          </div>
-          
-          <!-- Testimonial 3 -->
-          <div class="testimonial__content swiper-slide">
-            <div class="testimonial__data">
-              <div class="testimonial__header">
-                <img src="assets/img/profile.jpg" alt="Foto de aluno - depoimento" class="testimonial__img" loading="lazy">
-                
-                <div>
-                  <h3 class="testimonial__name">Roberto Mendes</h3>
-                  <span class="testimonial__client">Aluno - Categoria A</span>
-                </div>
-              </div>
-              
-              <div>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-                <i class="fas fa-star testimonial__icon-star"></i>
-              </div>
-            </div>
-            
-            <p class="testimonial__description">
-              Mesmo sendo um jogador avançado, as mentorias do Luiz me ajudaram a aprimorar aspectos técnicos e táticos que fizeram toda diferença nas competições.
-            </p>
-          </div>
-        </div>
-        
-        <!-- Add Pagination -->
-        <div class="swiper-pagination swiper-pagination-testimonial"></div>
       </div>
     </section>
     
@@ -645,25 +557,6 @@
         clickable: true,
         dynamicBullets: true,
       },
-    });
-    
-    /*==================== TESTIMONIAL SWIPER ====================*/
-    let swiperTestimonial = new Swiper('.testimonial__container', {
-      loop: true,
-      grabCursor: true,
-      spaceBetween: 48,
-      
-      pagination: {
-        el: '.swiper-pagination-testimonial',
-        clickable: true,
-        dynamicBullets: true,
-      },
-      
-      breakpoints: {
-        568: {
-          slidesPerView: 2,
-        }
-      }
     });
     
     /*==================== QUALIFICATION TABS ====================*/

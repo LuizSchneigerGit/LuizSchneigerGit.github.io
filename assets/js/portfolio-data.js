@@ -1,84 +1,87 @@
 /**
- * Arquivo de dados do portfólio de Luiz Henrique
- * Este arquivo contém todos os dados estruturados do portfólio para alimentar o site
+ * Arquivo de dados do portfólio de Luiz Henrique Schneiger
+ * Este arquivo contém todos os dados estruturados do portfólio para alimentar o site.
+ * Edite aqui (ou pelo painel admin) para atualizar o conteúdo.
  */
 
 const portfolioData = {
   // Informações básicas
   informacoesBasicas: {
-    nome: "Luiz Henrique",
+    nome: "Luiz Henrique Schneiger",
     profissao: "Atleta e Professor de Beach Tennis",
     email: "Luiz.schneiger@gmail.com",
     telefone: "(46) 99115-5082",
     instagram: "@LuizSchneigerBT",
-    fotoPerfil: "https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?q=80&w=600&auto=format&fit=crop",
-    fotoHero: "https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?q=80&w=1200&auto=format&fit=crop",
-    fotoSobre: "https://images.unsplash.com/photo-1533560904424-a0c61c4aef5d?q=80&w=800&auto=format&fit=crop"
+    patrocinador: "Ama Sport",
+    fotoPerfil: "assets/img/profile.jpg",
+    fotoHero: "assets/img/hero.jpg",
+    fotoSobre: "assets/img/about.jpg"
   },
-  
-  // Resumo inicial
+
+  // Resumo inicial (texto de abertura do hero)
   resumoInicial: {
     titulo: "Resumo Inicial",
-    conteudo: "Olá, sou Luiz Henrique, atleta e professor de beach tennis com uma base sólida em tênis. Há 1 ano, iniciei minha trajetória no beach tennis, destacando-me pela evolução rápida e dedicação ao esporte. Este portfólio apresenta minha jornada esportiva, habilidades e objetivos futuros, além de ser um convite para potenciais patrocinadores que desejam apoiar meu crescimento e compartilhar dessa paixão pelo esporte."
+    conteudo: "Sou Luiz Henrique Schneiger, atleta e professor de Beach Tennis na região de Pato Branco (PR). Há dois anos e meio dedico-me ao Beach Tennis, somando essa caminhada a uma base sólida construída no tênis, o que acelerou minha evolução técnica e competitiva. Atuo nas duas frentes que mais me movem: a competição de alto rendimento e o ensino, levando o esporte a alunos de todos os níveis. Tenho orgulho de contar com o apoio da Ama Sport, minha patrocinadora oficial, parceira que caminha comigo dentro e fora das quadras."
   },
-  
+
   // Objetivos do portfólio
   objetivosPortfolio: {
     titulo: "Objetivos do Portfólio",
     itens: [
-      "Apresentar minha trajetória esportiva, mostrando meu desenvolvimento no tênis e a transição para o beach tennis.",
-      "Atrair patrocinadores, criando um material atrativo que mostre meu potencial como atleta e parceiro comercial.",
-      "Fortalecer minha imagem profissional, refletindo seriedade, comprometimento e paixão pelo esporte.",
-      "Ampliar oportunidades, facilitando conexões com organizadores de torneios, treinadores e outros atletas."
+      "Apresentar minha trajetória esportiva e minha evolução no Beach Tennis.",
+      "Atrair e fortalecer parcerias com marcas que compartilham minha paixão pelo esporte.",
+      "Reforçar minha imagem profissional como atleta, professor e árbitro.",
+      "Ampliar conexões com organizadores de torneios, treinadores e outros atletas."
     ]
   },
-  
+
   // Trajetória no Beach Tennis
   trajetoria: {
     titulo: "Trajetória no Beach Tennis",
-    conteudo: "O beach tennis é um esporte dinâmico que combina elementos do tênis, vôlei de praia e badminton. Desde o início de minha jornada, participei de torneios locais e regionais que desafiaram minhas habilidades e contribuíram para minha evolução técnica e mental."
+    conteudo: "Há dois anos e meio no Beach Tennis, trouxe do tênis uma base sólida que acelerou minha evolução. Participo de torneios regionais e estaduais que desafiam minhas habilidades e contribuem para meu desenvolvimento técnico e mental, sempre com o apoio da minha patrocinadora oficial, a Ama Sport."
   },
-  
-  // Atleta e Professor
+
+  // Atleta e Professor (seção "Sobre Mim")
   atletaProfessor: {
     titulo: "Atleta e Professor",
     paragrafos: [
-      "Além de competir, também atuo como professor de beach tennis, compartilhando meus conhecimentos e experiências com alunos de todas as idades. Atualmente, tenho um grupo de 35 alunos fixos, que atendo em três dias da semana no período da noite. Minha abordagem é personalizada, adaptando-me às necessidades de alunos iniciantes, intermediários e avançados.",
-      "Minha metodologia foca no desenvolvimento técnico, físico e mental, ajudando os praticantes a melhorar suas habilidades e a se divertir com o esporte. Busco criar um ambiente de aprendizado dinâmico e motivador, onde os alunos possam se desenvolver não apenas como atletas, mas também como pessoas.",
-      "A longo prazo, pretendo expandir minha atuação como professor, aumentando o número de alunos e fechando parcerias com diversas áreas do esporte, como academias, clubes e organizações esportivas, para promover o beach tennis e oferecer oportunidades de desenvolvimento para mais pessoas."
+      "Minha trajetória no Beach Tennis começou há dois anos e meio, sustentada pela vivência que trago do tênis. Essa transição acelerou meu desenvolvimento e me deu repertório técnico e tático para competir e, ao mesmo tempo, ensinar. Hoje divido minha rotina entre o treino de alto rendimento e a sala de aula, sempre com o respaldo da minha patrocinadora oficial, a Ama Sport.",
+      "Como professor, atendo às segundas e terças-feiras, das 16h às 21h, com uma metodologia personalizada que acompanha o aluno do iniciante ao avançado. O trabalho é estruturado em quatro pilares: técnica, tática, preparo físico e aspecto mental. A proposta é fazer com que cada pessoa evolua no próprio ritmo, com fundamentos sólidos e leitura de jogo, mantendo o prazer de praticar o esporte.",
+      "Competir e ensinar se retroalimentam: o que aprendo nos torneios chega direto às aulas, e a didática me torna um atleta mais consciente. É esse conjunto — experiência de quadra somada ao método de ensino — que ofereço a alunos, parceiros e patrocinadores."
     ]
   },
-  
-  // Participações em Eventos/Torneios
+
+  // Participações em Eventos/Torneios (linha do tempo "Experiência")
   participacoesTorneios: {
     titulo: "Participações em Eventos/Torneios",
     anos: [
       {
         ano: "2024",
         eventos: [
-          "Ranking Regional Categoria C: 10ª posição.",
-          "Participações nos Interclubes Regionais e Estadual."
+          "10º lugar no Ranking Regional (Categoria C).",
+          "Participações nos Interclubes Regionais e no Estadual."
         ],
-        imagens: [
-          "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=800&auto=format&fit=crop"
-        ]
+        imagens: []
       },
       {
         ano: "2025",
         eventos: [
-          "Campeão no Torneio em Realança na Mega Arena (Categoria C).",
-          "Campeão no Torneio de Francisco Beltrão FPT 1600 na Arena Beltrão.",
-          "Finalista no Grand Slam 2500 Nível Estadual (Categoria C)."
+          "14º lugar no Estadual (Categoria masculina C).",
+          "Participação na final estadual."
         ],
-        imagens: [
-          "https://images.unsplash.com/photo-1560012307-9b1b2e7f5b04?q=80&w=800&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1622279457486-28f993f78ade?q=80&w=800&auto=format&fit=crop"
-        ]
+        imagens: []
+      },
+      {
+        ano: "2026",
+        eventos: [
+          "Título do FPT 2000 (Categoria B)."
+        ],
+        imagens: []
       }
     ]
   },
-  
-  // Cursos e Treinamentos
+
+  // Cursos e Treinamentos (linha do tempo "Formação")
   cursosTreinamentos: {
     titulo: "Cursos e Treinamentos",
     cursos: [
@@ -86,7 +89,7 @@ const portfolioData = {
         nome: "Módulo CBT Verde",
         instituicao: "Treinamentos BT",
         ano: "2024",
-        descricao: "Fundamentos básicos do beach tennis, incluindo técnicas de saque, voleio e smash, e estratégias simples."
+        descricao: "Fundamentos básicos do Beach Tennis, incluindo técnicas de saque, voleio e smash, e estratégias simples."
       },
       {
         nome: "Módulo CBT Amarelo",
@@ -105,146 +108,141 @@ const portfolioData = {
         instituicao: "Federação Paranaense de Tênis",
         ano: "2024",
         descricao: "Regras e procedimentos para arbitrar partidas oficiais."
+      },
+      {
+        nome: "Curso Nacional de Arbitragem Auxiliar",
+        instituicao: "Federação Paranaense de Tênis",
+        ano: "Maio/2025",
+        descricao: "Formação em arbitragem auxiliar realizada pela FPT em maio de 2025, voltada ao apoio na condução de partidas oficiais e à aplicação correta das regras em quadra."
+      },
+      {
+        nome: "Curso de Arbitragem Geral Estadual",
+        instituicao: "Confederação Brasileira de Tênis",
+        ano: "Maio/2026",
+        descricao: "Capacitação em arbitragem geral realizada pela CBT em maio de 2026, ampliando minha atuação na arbitragem de competições no âmbito estadual."
+      },
+      {
+        nome: "Curso de Preparação Física Integrada ao Beach Tennis",
+        instituicao: "Federação Paranaense de Tênis",
+        ano: "Set/2026",
+        descricao: "Formação pela FPT, prevista para setembro de 2026, focada em integrar o preparo físico à demanda específica do Beach Tennis, beneficiando tanto meu rendimento quanto o trabalho com os alunos."
       }
     ]
   },
-  
-  // Objetivos Futuros
+
+  // Objetivos Futuros (carrossel "Objetivos")
   objetivosFuturos: {
     titulo: "Objetivos Futuros",
     curtoPrazo: {
-      titulo: "Metas de Curto Prazo (2025-2026)",
+      titulo: "Metas de Curto Prazo (2026-2027)",
       metas: [
-        "Aperfeiçoar habilidades técnicas para competir em alto nível.",
-        "Participar dos principais eventos estaduais e consolidar posição no ranking regional."
+        "Consolidar minha presença na Categoria B após o título conquistado no FPT 2000, buscando regularidade de resultados nos torneios regionais e estaduais.",
+        "Evoluir como professor e como árbitro, aplicando na prática as formações recentes em arbitragem e preparação física.",
+        "Fortalecer a parceria com a Ama Sport e atrair novas marcas alinhadas à minha trajetória."
       ]
     },
     longoPrazo: {
-      titulo: "Metas de Longo Prazo (2027-2030)",
+      titulo: "Metas de Longo Prazo (2028-2031)",
       metas: [
-        "Ficar entre os quatro primeiros no ranking do Paraná, visando disputar a Copa das Federações.",
-        "Expandir parcerias estratégicas com patrocinadores e empresas que compartilhem da minha visão e paixão pelo esporte."
+        "Lutar por um título estadual e disputar as primeiras posições na Categoria B, com a aspiração de avançar de nível.",
+        "Estruturar e ampliar meu trabalho como professor e mentor, buscando consolidar uma metodologia de referência na região de Pato Branco.",
+        "Construir parcerias estratégicas duradouras com patrocinadores, ampliando minha presença no cenário do Beach Tennis."
       ]
     }
   },
-  
-  // Parcerias Estratégicas
+
+  // Parcerias Estratégicas (conteúdo de apoio)
   parceriasEstrategicas: {
     titulo: "Parcerias Estratégicas",
-    descricao: "Estou aberto a colaborar com patrocinadores e empresas que compartilhem da minha visão e paixão pelo esporte. Essas parcerias são uma via eficaz para atrair mais pessoas e aumentar o engajamento com as marcas e serviços, gerando benefícios mútuos.",
+    descricao: "Tenho orgulho de contar com a Ama Sport como minha patrocinadora oficial e estou aberto a novas colaborações com marcas que compartilhem minha paixão pelo esporte. Essas parcerias geram exposição e valor mútuo dentro e fora das quadras.",
     beneficios: [
       "Divulgação nas redes sociais, com postagens e stories destacando a marca.",
-      "Promoção em eventos, com exposição do logotipo em uniformes, materiais esportivos e banners durante competições e treinos.",
+      "Exposição do logotipo em uniformes, materiais esportivos e banners durante competições e treinos.",
       "Menções em entrevistas para mídias esportivas e regionais.",
       "Participação em campanhas publicitárias e eventos promocionais."
     ],
-    exemplos: "Exemplos de parcerias incluem empresas de equipamentos esportivos, academias, clubes e mídias locais."
+    exemplos: "Patrocinadora oficial atual: Ama Sport."
   },
-  
-  // Estatísticas
-  estatisticas: {
-    alunosAtivos: 35,
-    posicaoRanking: "10ª",
-    torneiosVencidos: 3
-  },
-  
-  // Depoimentos
-  depoimentos: [
-    {
-      nome: "Carlos Silva",
-      categoria: "Aluno - Categoria C",
-      texto: "As aulas com o Luiz transformaram meu jogo. Em poucos meses, evoluí muito tecnicamente e consegui subir de categoria. Recomendo a todos!",
-      foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-      avaliacao: 5
-    },
-    {
-      nome: "Ana Oliveira",
-      categoria: "Aluna - Iniciante",
-      texto: "Comecei do zero com o Luiz e em poucas aulas já estava jogando com confiança. A didática dele é excelente, explica tudo com muita paciência.",
-      foto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
-      avaliacao: 5
-    },
-    {
-      nome: "Roberto Mendes",
-      categoria: "Aluno - Categoria A",
-      texto: "Mesmo sendo um jogador avançado, as mentorias do Luiz me ajudaram a aprimorar aspectos técnicos e táticos que fizeram toda diferença nas competições.",
-      foto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
-      avaliacao: 5
-    }
+
+  // Estatísticas (3 contadores da seção "Sobre") — valor + rótulo
+  estatisticas: [
+    { valor: "2,5", rotulo: "Anos no<br>Beach Tennis" },
+    { valor: "14º", rotulo: "Ranking<br>Estadual (Cat. C)" },
+    { valor: "FPT 2000", rotulo: "Título<br>(Cat. B)" }
   ],
-  
-  // Galeria de fotos
+
+  // Galeria de fotos (carrossel "Portfólio — Conquistas recentes")
   galeria: [
     {
-      titulo: "Torneio Regional 2024",
-      url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=800&auto=format&fit=crop",
-      descricao: "Participação no Torneio Regional de Beach Tennis 2024"
+      titulo: "Título FPT 2000 — Categoria B",
+      url: "assets/img/portfolio1.jpg",
+      descricao: "Campeão do FPT 2000 na Categoria B (2026)."
     },
     {
-      titulo: "Aula em Grupo",
-      url: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=800&auto=format&fit=crop",
-      descricao: "Aula em grupo com alunos iniciantes"
+      titulo: "Final do Estadual — Categoria C",
+      url: "assets/img/portfolio2.jpg",
+      descricao: "14º lugar e participação na final estadual (Categoria masculina C, 2025)."
     },
     {
-      titulo: "Torneio de Francisco Beltrão",
-      url: "https://images.unsplash.com/photo-1560012307-9b1b2e7f5b04?q=80&w=800&auto=format&fit=crop",
-      descricao: "Campeão no Torneio de Francisco Beltrão FPT 1600"
+      titulo: "Ranking Regional e Interclubes",
+      url: "assets/img/portfolio3.jpg",
+      descricao: "10º no Ranking Regional (Categoria C) e participações nos Interclubes (2024)."
     },
     {
-      titulo: "Grand Slam 2500",
-      url: "https://images.unsplash.com/photo-1622279457486-28f993f78ade?q=80&w=800&auto=format&fit=crop",
-      descricao: "Finalista no Grand Slam 2500 Nível Estadual"
+      titulo: "Aulas e treinos",
+      url: "assets/img/about.jpg",
+      descricao: "Treinos e aulas de Beach Tennis na região de Pato Branco."
     }
   ],
-  
-  // Serviços oferecidos
+
+  // Serviços oferecidos (4 cards)
   servicos: [
     {
-      titulo: "Aulas de Beach Tennis",
-      icone: "fas fa-table-tennis",
-      descricao: "Aulas para todos os níveis, desde iniciantes até avançados.",
+      titulo: "Aulas",
+      icone: "fas fa-table-tennis-paddle-ball",
+      descricao: "Aulas de Beach Tennis para todos os níveis, do iniciante ao avançado, às segundas e terças-feiras, das 16h às 21h, com metodologia personalizada.",
       detalhes: [
-        "Aulas para todos os níveis: iniciante ao avançado.",
-        "Aulas individuais ou em grupo.",
-        "Metodologia personalizada para cada aluno.",
-        "Desenvolvimento técnico, tático e físico.",
-        "Preparação para competições."
+        "Atendimento do iniciante ao avançado, respeitando o ritmo de cada aluno.",
+        "Metodologia personalizada construída sobre quatro pilares: técnica, tática, preparo físico e aspecto mental.",
+        "Aulas às segundas e terças-feiras, das 16h às 21h.",
+        "Construção de fundamentos sólidos e leitura de jogo.",
+        "Preparação orientada para a evolução competitiva."
       ]
     },
     {
-      titulo: "Arbitragem Profissional",
-      icone: "fas fa-flag-checkered",
-      descricao: "Serviços de arbitragem para torneios e competições.",
-      detalhes: [
-        "Arbitragem em torneios e competições.",
-        "Organização de chaves e tabelas.",
-        "Aplicação das regras oficiais do esporte.",
-        "Gestão de conflitos durante partidas.",
-        "Consultoria para organização de eventos."
-      ]
-    },
-    {
-      titulo: "Mentorias Especializadas",
+      titulo: "Mentoria",
       icone: "fas fa-lightbulb",
-      descricao: "Acompanhamento personalizado para desenvolvimento de atletas.",
+      descricao: "Acompanhamento individualizado para atletas que querem evoluir de forma estruturada, com foco em desempenho e tomada de decisão em quadra.",
       detalhes: [
-        "Acompanhamento personalizado para atletas.",
-        "Planejamento de carreira esportiva.",
-        "Análise técnica e tática de jogos.",
+        "Plano de evolução personalizado para o atleta.",
+        "Análise técnica e tática do jogo.",
+        "Trabalho de preparo físico aplicado ao Beach Tennis.",
         "Preparação mental para competições.",
-        "Desenvolvimento de estratégias de jogo."
+        "Definição de estratégias para torneios e categorias."
+      ]
+    },
+    {
+      titulo: "Arbitragem",
+      icone: "fas fa-flag-checkered",
+      descricao: "Atuação em arbitragem de Beach Tennis com formação pela FPT e pela CBT, garantindo a aplicação correta das regras em treinos e competições.",
+      detalhes: [
+        "Aplicação das regras oficiais em partidas e torneios.",
+        "Formação em arbitragem auxiliar e geral pela FPT (Federação Paranaense de Tênis) e pela CBT (Confederação Brasileira de Tênis).",
+        "Apoio na organização de chaves e no andamento dos jogos.",
+        "Gestão de situações e conflitos durante as partidas.",
+        "Suporte técnico para organizadores de eventos."
       ]
     },
     {
       titulo: "Parcerias Estratégicas",
-      icone: "fas fa-bullhorn",
-      descricao: "Colaboração com marcas e empresas para promoção mútua.",
+      icone: "fas fa-handshake",
+      descricao: "Colaboração com marcas que compartilham a paixão pelo esporte, gerando exposição e valor mútuo dentro e fora das quadras. Tenho orgulho de já contar com a Ama Sport como minha patrocinadora oficial.",
       detalhes: [
-        "Divulgação nas redes sociais, com postagens e stories destacando a marca.",
-        "Promoção em eventos, com exposição do logotipo em uniformes e materiais.",
+        "Exposição de marca em uniformes e materiais durante treinos e competições.",
+        "Divulgação nas redes sociais, com postagens e stories.",
         "Menções em entrevistas para mídias esportivas e regionais.",
-        "Participação em campanhas publicitárias e eventos promocionais.",
-        "Parcerias com equipamentos esportivos, academias, clubes e mídias locais."
+        "Participação em ações e campanhas promocionais.",
+        "Vínculo próximo e duradouro, no modelo da parceria com a Ama Sport."
       ]
     }
   ]

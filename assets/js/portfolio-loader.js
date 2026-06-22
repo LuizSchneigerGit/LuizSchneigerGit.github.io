@@ -19,10 +19,20 @@
   document.querySelector('.home__blob-img').setAttribute('href', portfolioData.informacoesBasicas.fotoHero);
   document.querySelector('.about__img img').src = portfolioData.informacoesBasicas.fotoSobre;
   
-  // Atualizar estatísticas
-  document.querySelectorAll('.about__info-title')[0].textContent = `${portfolioData.estatisticas.alunosAtivos}+`;
-  document.querySelectorAll('.about__info-title')[1].textContent = portfolioData.estatisticas.posicaoRanking;
-  document.querySelectorAll('.about__info-title')[2].textContent = `0${portfolioData.estatisticas.torneiosVencidos}+`;
+  // Atualizar estatísticas (valor + rótulo)
+  const infoTitles = document.querySelectorAll('.about__info-title');
+  const infoNames = document.querySelectorAll('.about__info-name');
+  (portfolioData.estatisticas || []).forEach((stat, i) => {
+    if (infoTitles[i]) infoTitles[i].textContent = stat.valor;
+    if (infoNames[i]) infoNames[i].innerHTML = stat.rotulo;
+  });
+
+  // Patrocinador oficial (destaque no hero)
+  const sponsorEl = document.querySelector('.home__sponsor');
+  if (sponsorEl && portfolioData.informacoesBasicas.patrocinador) {
+    const sponsorName = sponsorEl.querySelector('strong');
+    if (sponsorName) sponsorName.textContent = portfolioData.informacoesBasicas.patrocinador;
+  }
   
   // Atualizar seção Sobre
   document.querySelector('.about__description').innerHTML = portfolioData.atletaProfessor.paragrafos.map(p => `<p>${p}</p>`).join('');
@@ -187,19 +197,8 @@
     }
   });
   
-  // Atualizar depoimentos
-  const testimonialSlides = document.querySelectorAll('.testimonial__content');
-  portfolioData.depoimentos.forEach((depoimento, index) => {
-    if (index < testimonialSlides.length) {
-      const slide = testimonialSlides[index];
-      slide.querySelector('.testimonial__img').src = depoimento.foto;
-      slide.querySelector('.testimonial__img').alt = 'Foto de ' + depoimento.nome;
-      slide.querySelector('.testimonial__name').textContent = depoimento.nome;
-      slide.querySelector('.testimonial__client').textContent = depoimento.categoria;
-      slide.querySelector('.testimonial__description').textContent = depoimento.texto;
-    }
-  });
-  
+  // (Seção de depoimentos removida)
+
   // Atualizar contato
   document.querySelector('.contact__subtitle').textContent = portfolioData.informacoesBasicas.telefone;
   document.querySelectorAll('.contact__subtitle')[1].textContent = portfolioData.informacoesBasicas.email;

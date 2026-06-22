@@ -1285,3 +1285,11 @@ img {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==================== ITENS DESABILITADOS (em construção) ==================== */
+.nav__link--soon,
+.footer__link--soon {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

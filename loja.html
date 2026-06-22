@@ -17,10 +17,10 @@
   <meta property="og:site_name" content="Luiz Schneiger - Beach Tennis">
   <meta property="og:title" content="Loja — Beach Tennis">
   <meta property="og:description" content="Aulas, pacotes, equipamentos e vestuário de Beach Tennis. Peça pelo WhatsApp.">
-  <meta property="og:url" content="https://luizschneigergit.github.io/loja.html">
-  <meta property="og:image" content="https://luizschneigergit.github.io/assets/img/hero.jpg">
+  <meta property="og:url" content="https://luizschneigerbt.com.br/loja.html">
+  <meta property="og:image" content="https://luizschneigerbt.com.br/assets/img/hero.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://luizschneigergit.github.io/assets/img/hero.jpg">
+  <meta name="twitter:image" content="https://luizschneigerbt.com.br/assets/img/hero.jpg">
 
   <!-- ==================== FONTES ==================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -61,9 +61,9 @@
             </a>
           </li>
           <li class="nav__item">
-            <a href="loja.html" class="nav__link active-link">
+            <span class="nav__link nav__link--soon active-link" aria-disabled="true" title="Loja em construção">
               <i class="fas fa-store nav__icon"></i> Loja
-            </a>
+            </span>
           </li>
           <li class="nav__item">
             <a href="arbitragem.html" class="nav__link">
@@ -86,13 +86,22 @@
 
   <!-- ==================== MAIN ==================== -->
   <main class="main">
-    <section class="loja section" id="loja">
-      <h2 class="section__title">Loja</h2>
-      <span class="section__subtitle">Aulas, equipamentos e mais — pedido pelo WhatsApp</span>
-
-      <div class="container">
-        <div class="loja__filtros" id="loja-filtros"><!-- filtros dinâmicos --></div>
-        <div class="loja__grid" id="loja-grid"><!-- produtos dinâmicos --></div>
+    <section class="section loja-construcao">
+      <div class="container loja-construcao__box">
+        <i class="fas fa-screwdriver-wrench loja-construcao__icon"></i>
+        <h2 class="section__title">Loja em construção</h2>
+        <span class="section__subtitle">Estamos preparando tudo para você. Em breve a loja estará disponível!</span>
+        <p class="loja-construcao__txt">
+          Enquanto isso, fale comigo no WhatsApp para aulas, pacotes e equipamentos.
+        </p>
+        <div class="loja-construcao__acoes">
+          <a href="https://wa.me/5546991155082" target="_blank" rel="noopener" class="loja-construcao__btn loja-construcao__btn--wpp">
+            <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+          </a>
+          <a href="index.html" class="loja-construcao__btn">
+            <i class="fas fa-arrow-left"></i> Voltar ao início
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -110,7 +119,7 @@
         <ul class="footer__links">
           <li><a href="quem-sou-eu.html" class="footer__link">Quem Sou Eu</a></li>
           <li><a href="horarios.html" class="footer__link">Horários</a></li>
-          <li><a href="loja.html" class="footer__link">Loja</a></li>
+          <li><span class="footer__link footer__link--soon">Loja (em breve)</span></li>
           <li><a href="arbitragem.html" class="footer__link">Arbitragem</a></li>
         </ul>
 
@@ -131,53 +140,13 @@
     </div>
   </footer>
 
-  <!-- ==================== CARRINHO ==================== -->
-  <button class="cart-fab" id="cart-open" aria-label="Abrir carrinho">
-    <i class="fas fa-shopping-cart"></i>
-    <span class="cart-fab__count" id="cart-count">0</span>
-  </button>
-
-  <div class="cart-overlay" id="cart-overlay"></div>
-
-  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrinho de compras">
-    <div class="cart__head">
-      <h2><i class="fas fa-shopping-cart"></i> Seu carrinho</h2>
-      <button class="cart__close" id="cart-close" aria-label="Fechar">&times;</button>
-    </div>
-
-    <div class="cart__items" id="cart-items"><!-- itens dinâmicos --></div>
-
-    <div class="cart__foot">
-      <div class="cart__total">
-        <strong>Total estimado</strong>
-        <span id="cart-total">R$ 0,00</span>
-      </div>
-      <button class="cart__checkout" id="cart-checkout">
-        <i class="fab fa-whatsapp"></i> Finalizar pelo WhatsApp
-      </button>
-      <p class="cart__nota">O pedido é enviado pelo WhatsApp para combinar pagamento e entrega.</p>
-    </div>
-  </aside>
-
   <!-- ==================== SCROLL TOP ==================== -->
   <a href="#" class="scrollup" id="scroll-up">
     <i class="fas fa-arrow-up scrollup__icon"></i>
   </a>
 
   <!-- ==================== JS ==================== -->
-  <script>
-    // Carrega dados + loader sempre frescos (cache-busting) para refletir a última versão publicada.
-    (function () {
-      function load(src, cb) {
-        var s = document.createElement('script');
-        s.src = src + '?t=' + Date.now();
-        s.onload = cb || function () {};
-        s.onerror = cb || function () {};
-        document.head.appendChild(s);
-      }
-      load('assets/js/loja-data.js', function () { load('assets/js/loja-loader.js'); });
-    })();
-  </script>
+  <!-- Loja em construção: carregamento de produtos/carrinho desativado -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/reveal.js"></script>
 </body>

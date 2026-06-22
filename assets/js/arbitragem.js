@@ -49,13 +49,13 @@
     var totalAuxDiarias = auxPorDia.reduce(function (a, b) { return a + b; }, 0);
     var totalAux = data.valorArbitroAuxiliar * totalAuxDiarias;
 
-    // Deslocamento por dia (o trajeto se repete a cada dia do torneio) × nº de dias.
-    // "Idas e voltas" é numérico: cada unidade = 1 ida e volta completa (2 × km de ida).
+    // Deslocamento: cada "ida e volta" = 2 × km de ida. O custo de uma ida e volta
+    // é multiplicado pela QUANTIDADE de idas e voltas (não pelos dias do torneio).
     var voltas = Number(inp.idasVoltas);
     if (isNaN(voltas) || voltas < 0) voltas = 0;
-    var kmEf = (Number(inp.km) || 0) * 2 * voltas;
-    var deslocamentoPorDia = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
-    var deslocamento = deslocamentoPorDia * numDias;
+    var kmEf = (Number(inp.km) || 0) * 2;                       // km de uma ida e volta
+    var custoPorIdaVolta = kmEf * data.valorKm + (Number(inp.pedagios) || 0);
+    var deslocamento = custoPorIdaVolta * voltas;
 
     var alimentacao = 0;
     if (inp.incluirAlimentacao) {
@@ -67,7 +67,7 @@
     return {
       faixa: faixa, diariaAG: diariaAG, numDias: numDias, totalAG: totalAG,
       auxPorDia: auxPorDia, totalAuxDiarias: totalAuxDiarias, totalAux: totalAux,
-      voltas: voltas, kmEf: kmEf, deslocamentoPorDia: deslocamentoPorDia, deslocamento: deslocamento,
+      voltas: voltas, kmEf: kmEf, custoPorIdaVolta: custoPorIdaVolta, deslocamento: deslocamento,
       alimentacao: alimentacao, totalFinal: totalFinal
     };
   }
@@ -88,9 +88,9 @@
       }).join("  |  ");
       L.push("  (" + det + ")");
     }
-    L.push("Deslocamento: " + money(c.deslocamentoPorDia) + "/dia x " + c.numDias + " dia(s) = " + money(c.deslocamento));
-    L.push("  (" + (Number(inp.km) || 0) + " km ida x 2 x " + c.voltas + " (ida/volta) = " + km1(c.kmEf) +
-      " km x " + km1(data.valorKm) + " + pedágios/dia " + money(inp.pedagios || 0) + ")");
+    L.push("Deslocamento: " + money(c.custoPorIdaVolta) + " x " + c.voltas + " ida(s) e volta(s) = " + money(c.deslocamento));
+    L.push("  (" + (Number(inp.km) || 0) + " km ida x 2 = " + km1(c.kmEf) +
+      " km x " + km1(data.valorKm) + " + pedágios " + money(inp.pedagios || 0) + " por ida/volta)");
     if (c.alimentacao > 0) {
       L.push("Alimentação: " + inp.refeicoesPorDia + " ref/dia x " + money(inp.valorRefeicao) +
         " x " + c.numDias + " dia(s) = " + money(c.alimentacao));
@@ -285,7 +285,7 @@
         resumo.appendChild(linha(c.faixa.label, ArbitragemCalc.money(c.diariaAG) + "/dia", false));
         resumo.appendChild(linha("Árbitro Geral (" + c.numDias + " dia(s))", ArbitragemCalc.money(c.totalAG), false));
         resumo.appendChild(linha("Auxiliares (" + c.totalAuxDiarias + " diária(s))", ArbitragemCalc.money(c.totalAux), false));
-        resumo.appendChild(linha("Deslocamento (" + ArbitragemCalc.money(c.deslocamentoPorDia) + "/dia × " + c.numDias + ")", ArbitragemCalc.money(c.deslocamento), false));
+        resumo.appendChild(linha("Deslocamento (" + ArbitragemCalc.money(c.custoPorIdaVolta) + " × " + c.voltas + " ida/volta)", ArbitragemCalc.money(c.deslocamento), false));
         if (inp.incluirAlimentacao) {
           resumo.appendChild(linha("Alimentação (" + inp.refeicoesPorDia + " ref/dia × " + c.numDias + ")", ArbitragemCalc.money(c.alimentacao), false));
         }

@@ -84,7 +84,7 @@
     if (inp.dias && inp.dias.length) {
       var det = inp.dias.map(function (d, i) {
         return (d.label || ("Dia " + (i + 1))) + ": " +
-          (d.arbitroAuxiliar === false ? "sem aux" : (c.auxPorDia[i] + " aux/" + (Number(d.quadras) || 0) + "q"));
+          (d.arbitroAuxiliar === false ? "sem aux" : (c.auxPorDia[i] + (c.auxPorDia[i] === 1 ? " Auxiliar" : " Auxiliares")));
       }).join("  |  ");
       L.push("  (" + det + ")");
     }

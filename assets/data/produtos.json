@@ -1,0 +1,84 @@
+[
+  {
+    "id": "aula-experimental",
+    "nome": "Aula Experimental",
+    "categoria": "aulas",
+    "preco": 50.00,
+    "img": "assets/img/about.jpg",
+    "descricao": "Primeira aula para conhecer o esporte e a metodologia. Condições especiais para novos alunos.",
+    "destaque": true,
+    "estoque": true
+  },
+  {
+    "id": "pacote-8-aulas",
+    "nome": "Pacote 8 Aulas",
+    "categoria": "aulas",
+    "preco": 320.00,
+    "parcelas": 3,
+    "img": "assets/img/hero.jpg",
+    "descricao": "Pacote mensal com 8 aulas, do iniciante ao avançado. Evolução técnica e tática.",
+    "destaque": false,
+    "estoque": true
+  },
+  {
+    "id": "camiseta-lsbt",
+    "nome": "Camiseta Luiz Schneiger BT",
+    "categoria": "vestuario",
+    "preco": 89.90,
+    "parcelas": 3,
+    "img": "assets/img/produtos/camiseta.jpg",
+    "descricao": "Camiseta dry-fit com proteção UV. Leve, respirável e estilosa para a areia.",
+    "destaque": true,
+    "estoque": true
+  },
+  {
+    "id": "bone-lsbt",
+    "nome": "Boné LS BT",
+    "categoria": "vestuario",
+    "preco": 59.90,
+    "img": "assets/img/produtos/bone.jpg",
+    "descricao": "Boné esportivo com ajuste regulável. Proteção contra o sol nos treinos.",
+    "destaque": false,
+    "estoque": true
+  },
+  {
+    "id": "viseira-lsbt",
+    "nome": "Viseira LS BT",
+    "categoria": "vestuario",
+    "preco": 45.00,
+    "img": "assets/img/produtos/viseira.jpg",
+    "descricao": "Viseira leve com ajuste regulável, perfeita para os dias de sol.",
+    "destaque": false,
+    "estoque": false
+  },
+  {
+    "id": "overgrip-pro",
+    "nome": "Overgrip Pro (3 un.)",
+    "categoria": "acessorios",
+    "preco": 35.00,
+    "img": "assets/img/produtos/overgrip.jpg",
+    "descricao": "Antiderrapante, alta absorção. Pack com 3 unidades.",
+    "destaque": false,
+    "estoque": true
+  },
+  {
+    "id": "tubo-bolas",
+    "nome": "Tubo de Bolas (3 un.)",
+    "categoria": "equipamento",
+    "preco": 49.90,
+    "img": "assets/img/produtos/bolas.jpg",
+    "descricao": "Bolas oficiais de beach tennis (pressão reduzida), para treinos e jogos.",
+    "destaque": false,
+    "estoque": true
+  },
+  {
+    "id": "raquete-pro",
+    "nome": "Raquete Beach Tennis Pro",
+    "categoria": "equipamento",
+    "preco": null,
+    "img": "assets/img/produtos/raquete.jpg",
+    "descricao": "Raquete profissional de fibra de carbono. Modelos e valores sob consulta.",
+    "destaque": false,
+    "estoque": true
+  }
+]

@@ -108,7 +108,10 @@
       var totRefs = c.alimDetalhe.reduce(function (a, d) { return a + d.pessoas * d.refs; }, 0);
       L.push("Alimentação: " + totRefs + " refeição(ões) x " + money(inp.valorRefeicao) + " = " + money(c.alimentacao));
       var detAlim = c.alimDetalhe.map(function (d) {
-        return d.label + ": " + d.pessoas + "p x " + d.refs + " ref (" + (d.periodo === "meio" ? "meio dia" : "dia todo") + ")";
+        var totalRef = d.pessoas * d.refs;
+        return d.label + ": " + d.pessoas + (d.pessoas === 1 ? " pessoa" : " pessoas") +
+          " x " + totalRef + (totalRef === 1 ? " refeição" : " refeições") +
+          " (" + (d.periodo === "meio" ? "meio dia" : "dia todo") + ")";
       }).join("  |  ");
       L.push("  (" + detAlim + ")");
     }

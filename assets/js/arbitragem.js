@@ -116,8 +116,6 @@
       L.push("  (" + detAlim + ")");
     }
     L.push("Total Arbitragem: " + money(c.totalFinal));
-    L.push(data.arbitro.nome);
-    L.push("Pix: " + data.arbitro.pix);
     return L.join("\n");
   }
 

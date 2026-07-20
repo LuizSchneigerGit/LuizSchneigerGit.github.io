@@ -155,35 +155,21 @@
     servicosContainer.innerHTML += servicoHTML;
   });
   
-  // Atualizar objetivos
-  const objetivosSlides = document.querySelectorAll('#objetivos .swiper-slide');
-  if (objetivosSlides.length >= 2) {
-    // Curto prazo
-    const curtoPrazoHTML = `
-      <div class="portfolio__data">
-        <h3 class="portfolio__title">${portfolioData.objetivosFuturos.curtoPrazo.titulo}</h3>
-        <div class="portfolio__description">
-          <ul style="list-style-type: disc; padding-left: 20px; text-align: left;">
-            ${portfolioData.objetivosFuturos.curtoPrazo.metas.map(meta => `<li>${meta}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-    `;
-    objetivosSlides[0].innerHTML = curtoPrazoHTML;
-    
-    // Longo prazo
-    const longoPrazoHTML = `
-      <div class="portfolio__data">
-        <h3 class="portfolio__title">${portfolioData.objetivosFuturos.longoPrazo.titulo}</h3>
-        <div class="portfolio__description">
-          <ul style="list-style-type: disc; padding-left: 20px; text-align: left;">
-            ${portfolioData.objetivosFuturos.longoPrazo.metas.map(meta => `<li>${meta}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-    `;
-    objetivosSlides[1].innerHTML = longoPrazoHTML;
+  // Atualizar objetivos (cards estáticos: curto e longo prazo)
+  function preencheObjetivo(cardId, obj) {
+    const card = document.querySelector(cardId);
+    if (!card || !obj) return;
+    const tituloEl = card.querySelector('.objetivos__titulo');
+    const listaEl = card.querySelector('.objetivos__lista');
+    if (tituloEl) tituloEl.textContent = obj.titulo;
+    if (listaEl) {
+      listaEl.innerHTML = (obj.metas || [])
+        .map(meta => `<li><i class="fas fa-circle-check"></i><span>${meta}</span></li>`)
+        .join('');
+    }
   }
+  preencheObjetivo('#obj-curto', portfolioData.objetivosFuturos.curtoPrazo);
+  preencheObjetivo('#obj-longo', portfolioData.objetivosFuturos.longoPrazo);
   
   // Atualizar portfólio
   const portfolioSlides = document.querySelectorAll('#portfolio .swiper-slide');

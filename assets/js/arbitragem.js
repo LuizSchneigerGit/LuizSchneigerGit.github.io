@@ -137,12 +137,23 @@
     var form = $("arb-form");
     if (!form) return;
 
+    // Valor mínimo por refeição (FPT). Não é permitido cobrar menos que isso.
+    var VALOR_REF_MIN = Number(data.valorRefeicaoSugerido) || 50;
+
     // Preenche dados do recibo fixos (exibição)
     if ($("arb-arbitro-nome")) $("arb-arbitro-nome").textContent = data.arbitro.nome;
     if ($("arb-arbitro-pix")) $("arb-arbitro-pix").textContent = data.arbitro.pix;
 
-    // Default do valor da refeição (quantidade é fixa = data.refeicoesPorDiaPadrao)
-    if ($("arb-valor-refeicao") && !$("arb-valor-refeicao").value) $("arb-valor-refeicao").value = data.valorRefeicaoSugerido;
+    // Valor por refeição: default e mínimo (corrige para o mínimo se digitarem menos)
+    var valorRefEl = $("arb-valor-refeicao");
+    if (valorRefEl) {
+      valorRefEl.min = VALOR_REF_MIN;
+      if (!valorRefEl.value) valorRefEl.value = VALOR_REF_MIN;
+      valorRefEl.addEventListener("blur", function () {
+        var v = parseFloat((valorRefEl.value || "").replace(",", "."));
+        if (isNaN(v) || v < VALOR_REF_MIN) { valorRefEl.value = VALOR_REF_MIN; atualizar(); }
+      });
+    }
 
     // Estado das quadras / Árbitro Auxiliar / período de alimentação por data
     var quadrasPorData = {};
@@ -278,7 +289,7 @@
         idasVoltas: num("arb-ida-volta-qtd"),
         pedagios: num("arb-pedagios"),
         incluirAlimentacao: $("arb-incluir-alimentacao").checked,
-        valorRefeicao: num("arb-valor-refeicao")
+        valorRefeicao: Math.max(num("arb-valor-refeicao"), VALOR_REF_MIN)
       };
     }
 

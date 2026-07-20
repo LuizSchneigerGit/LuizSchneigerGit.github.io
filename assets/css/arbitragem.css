@@ -72,14 +72,18 @@
 .arb__resultado {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-}
-
-.arb__resumo {
+  gap: 1rem;
   background-color: var(--container-color);
   border-radius: 0.75rem;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
   padding: 1.25rem 1.5rem;
+}
+/* Botão do WhatsApp ocupa a largura do card (não estica na vertical) */
+.arb__resultado > .arb__btn { width: 100%; flex: 0 0 auto; }
+
+.arb__resumo {
+  display: flex;
+  flex-direction: column;
 }
 
 .arb__linha {
@@ -291,10 +295,16 @@
     grid-template-columns: 1fr 1fr;
     column-gap: 2rem;
   }
+  /* Card do total acompanha o scroll enquanto o formulário é preenchido */
+  .arb__resultado {
+    position: sticky;
+    top: 5rem;
+    align-self: start;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .arb__campos { grid-template-columns: 1fr; }
-  .arb__form, .arb__resumo, .arb__recibo-box { padding: 1.1rem; }
+  .arb__form, .arb__resultado { padding: 1.1rem; }
   .arb__btn { min-width: 100%; }
 }

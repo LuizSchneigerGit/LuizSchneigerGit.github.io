@@ -180,19 +180,16 @@
 
         </form>
 
-        <!-- ==================== RESULTADO ==================== -->
+        <!-- ==================== RESULTADO (card fixo/sticky) ==================== -->
         <div class="arb__resultado">
           <div class="arb__resumo" id="arb-resumo"><!-- resumo dinâmico --></div>
 
-          <div class="arb__recibo-box">
-            <h3 class="arb__recibo-titulo"><i class="fas fa-clipboard"></i> Resumo do recibo</h3>
-            <textarea class="arb__recibo" id="arb-recibo" readonly spellcheck="false"></textarea>
-            <div class="arb__acoes">
-              <button type="button" class="arb__btn arb__btn--whatsapp" id="arb-whatsapp">
-                <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
-              </button>
-            </div>
-          </div>
+          <button type="button" class="arb__btn arb__btn--whatsapp" id="arb-whatsapp">
+            <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
+          </button>
+
+          <!-- Texto do recibo: não é exibido; serve só para montar a mensagem do WhatsApp -->
+          <textarea class="arb__recibo" id="arb-recibo" readonly spellcheck="false" hidden aria-hidden="true"></textarea>
         </div>
       </div>
 

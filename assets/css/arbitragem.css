@@ -190,14 +190,25 @@
 
 .arb__dia {
   display: grid;
-  grid-template-columns: 3.2rem 1fr auto;
+  grid-template-columns: 4.6rem 1fr auto;
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
   background-color: var(--container-color-alt);
   border-radius: 0.5rem;
 }
-.arb__dia-data { font-weight: var(--font-semi-bold); color: var(--first-color); }
+.arb__dia-data {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  font-weight: var(--font-semi-bold);
+  color: var(--first-color);
+}
+.arb__dia-dow {
+  font-size: var(--smaller-font-size);
+  font-weight: var(--font-medium);
+  color: var(--text-color-light);
+}
 .arb__dia-campo { display: flex; align-items: center; gap: 0.5rem; }
 .arb__dia-cap { font-size: var(--smaller-font-size); color: var(--text-color-light); }
 .arb__dia-quadras { width: 5rem; padding: 0.45rem 0.5rem; }

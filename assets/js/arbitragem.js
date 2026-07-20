@@ -162,6 +162,9 @@
     }
     function pad(n) { return (n < 10 ? "0" : "") + n; }
     function labelData(d) { return pad(d.getDate()) + "/" + pad(d.getMonth() + 1); }
+    function nomeDiaSemana(d) {
+      return ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][d.getDay()];
+    }
     function isoData(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
 
     function listaDias() {
@@ -197,7 +200,7 @@
 
         var lbl = document.createElement("span");
         lbl.className = "arb__dia-data";
-        lbl.textContent = labelData(d);
+        lbl.innerHTML = '<span class="arb__dia-dow">' + nomeDiaSemana(d) + "</span>" + labelData(d);
 
         var grp = document.createElement("div");
         grp.className = "arb__dia-campo";
@@ -345,7 +348,7 @@
 
         var lbl = document.createElement("span");
         lbl.className = "arb__dia-data";
-        lbl.textContent = labelData(d);
+        lbl.innerHTML = '<span class="arb__dia-dow">' + nomeDiaSemana(d) + "</span>" + labelData(d);
 
         var sel = document.createElement("select");
         sel.className = "arb__input arb__alim-sel";

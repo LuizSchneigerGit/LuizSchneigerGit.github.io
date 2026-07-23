@@ -289,12 +289,12 @@
   <div class="footer-bar">
     <button class="btn" id="btn-download-horarios">⬇️ Baixar horarios-data.js</button>
     <button class="btn" id="btn-download-portfolio">⬇️ Baixar portfolio-data.js</button>
-    <button class="btn" id="btn-download-loja">⬇️ Baixar loja-data.js</button>
+    <button class="btn" id="btn-download-loja">⬇️ Baixar produtos.json</button>
     <button class="btn btn-ghost" id="btn-download-all">⬇️ Baixar todos</button>
     <div class="spacer"></div>
     <button class="btn btn-ghost" id="btn-conectar-pasta" style="display:none">📁 Conectar pasta (salvar imagens)</button>
     <button class="btn btn-ghost" id="btn-import">⬆️ Importar arquivo</button>
-    <input type="file" id="import-file" accept=".js,application/javascript,text/javascript" style="display:none">
+    <input type="file" id="import-file" accept=".js,.json,application/javascript,text/javascript,application/json" style="display:none">
     <button class="btn btn-ghost" id="btn-preview">👁️ Pré-visualizar JSON</button>
   </div>
 
@@ -308,8 +308,7 @@
   (function () {
     var arquivos = [
       'assets/js/portfolio-data.js',
-      'assets/js/horarios-data.js',
-      'assets/js/loja-data.js'
+      'assets/js/horarios-data.js'
     ];
     var restantes = arquivos.length;
     function pronto() { if (--restantes === 0) runAdmin(); }
@@ -327,7 +326,7 @@
     "use strict";
 
     // Garante que os dados foram carregados antes de iniciar
-    if (typeof horariosData === 'undefined' || typeof portfolioData === 'undefined' || typeof lojaData === 'undefined') {
+    if (typeof horariosData === 'undefined' || typeof portfolioData === 'undefined') {
       alert('Não foi possível carregar os dados. Verifique sua conexão e recarregue a página.');
       return;
     }
@@ -336,7 +335,7 @@
     // (let para permitir substituir ao importar um arquivo)
     let H = structuredClone(horariosData);
     let P = structuredClone(portfolioData);
-    let L = structuredClone(lojaData);
+    let PROD = []; // produtos da loja (assets/data/produtos.json — carregado via fetch)
 
     // ---------- Helpers de DOM ----------
     function el(tag, attrs, children) {
@@ -764,35 +763,24 @@
       peCard.appendChild(field("Exemplos", pe, "exemplos", { area: true }));
       root.appendChild(peCard);
 
-      // Estatísticas
-      const es = P.estatisticas;
-      const esCard = el("div", { class: "card" }, el("h2", null, "Estatísticas"));
-      esCard.appendChild(el("div", { class: "row" }, [
-        field("Alunos ativos", es, "alunosAtivos", { number: true, type: "number" }),
-        field("Posição no ranking", es, "posicaoRanking"),
-        field("Torneios vencidos", es, "torneiosVencidos", { number: true, type: "number" })
-      ]));
-      root.appendChild(esCard);
-
-      // Depoimentos
-      const depCard = el("div", { class: "card" }, el("h2", null, "Depoimentos"));
-      const depWrap = el("div");
-      function drawDep() {
-        depWrap.innerHTML = "";
-        P.depoimentos.forEach(function (d, i) {
+      // Estatísticas (3 contadores da seção "Sobre": valor + rótulo)
+      if (!Array.isArray(P.estatisticas)) P.estatisticas = [];
+      const esCard = el("div", { class: "card" }, el("h2", null, "Estatísticas (contadores da seção Sobre)"));
+      esCard.appendChild(el("div", { class: "muted-note" }, "Cada contador tem um Valor (ex: 2,5) e um Rótulo (ex: Anos no<br>Beach Tennis). O <br> quebra a linha."));
+      const esWrap = el("div");
+      function drawStats() {
+        esWrap.innerHTML = "";
+        P.estatisticas.forEach(function (s, i) {
           const box = el("div", { class: "item-box" });
-          box.appendChild(el("button", { class: "remove-x", onclick: function () { P.depoimentos.splice(i, 1); drawDep(); } }, "✕"));
-          box.appendChild(el("div", { class: "row" }, [field("Nome", d, "nome"), field("Categoria", d, "categoria")]));
-          box.appendChild(field("Texto", d, "texto", { area: true }));
-          box.appendChild(imageField("Foto", d, "foto"));
-          box.appendChild(field("Avaliação (1-5)", d, "avaliacao", { number: true, type: "number" }));
-          depWrap.appendChild(box);
+          box.appendChild(el("button", { class: "remove-x", onclick: function () { P.estatisticas.splice(i, 1); drawStats(); } }, "✕"));
+          box.appendChild(el("div", { class: "row" }, [field("Valor", s, "valor"), field("Rótulo", s, "rotulo")]));
+          esWrap.appendChild(box);
         });
       }
-      drawDep();
-      depCard.appendChild(depWrap);
-      depCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.depoimentos.push({ nome: "", categoria: "", texto: "", foto: "", avaliacao: 5 }); drawDep(); } }, "+ Adicionar depoimento"));
-      root.appendChild(depCard);
+      drawStats();
+      esCard.appendChild(esWrap);
+      esCard.appendChild(el("button", { class: "btn btn-add", onclick: function () { P.estatisticas.push({ valor: "", rotulo: "" }); drawStats(); } }, "+ Adicionar contador"));
+      root.appendChild(esCard);
 
       // Galeria
       const galCard = el("div", { class: "card" }, el("h2", null, "Galeria de fotos"));
@@ -838,76 +826,63 @@
     // ====================================================
     // ABA LOJA
     // ====================================================
+    var LOJA_CATS = ["aulas", "vestuario", "acessorios", "equipamento"];
     function renderLoja() {
       const root = document.getElementById("tab-loja");
+      if (!root) return;
       root.innerHTML = "";
 
-      // --- Contato / pedido ---
-      const cCard = el("div", { class: "card" }, el("h2", null, "Contato do pedido (WhatsApp)"));
-      cCard.appendChild(field("WhatsApp (só números, com DDI/DDD — ex: 5546991155082)", L.contato, "whatsapp"));
-      cCard.appendChild(field("Saudação inicial da mensagem do pedido", L.contato, "saudacao", { area: true }));
-      root.appendChild(cCard);
+      const card = el("div", { class: "card" }, el("h2", null, "Produtos da Loja"));
+      card.appendChild(el("div", { class: "muted-note" },
+        "Editado a partir de produtos.json. Categorias: aulas, vestuário, acessórios, equipamento. " +
+        "Deixe o Preço vazio para 'Sob consulta'. Baixe o produtos.json e faça commit em assets/data/."));
 
-      // --- Categorias ---
-      const catCard = el("div", { class: "card" }, el("h2", null, "Categorias da loja"));
-      catCard.appendChild(el("div", { class: "muted-note" }, "A 'chave' é o identificador interno usado pelos produtos. O ícone usa classes do Font Awesome (ex: fas fa-store)."));
-      const catWrap = el("div");
-      function drawCats() {
-        catWrap.innerHTML = "";
-        L.categorias.forEach(function (cat, i) {
-          const box = el("div", { class: "item-box" });
-          box.appendChild(el("button", { class: "remove-x", title: "Remover", onclick: function () {
-            const usados = L.produtos.filter(function (p) { return p.categoria === cat.chave; }).length;
-            if (usados > 0 && !confirm("Há " + usados + " produto(s) nesta categoria. Remover mesmo assim? (os produtos ficarão sem categoria válida)")) return;
-            L.categorias.splice(i, 1); drawCats(); drawProdutos();
-          } }, "✕"));
-          box.appendChild(el("div", { class: "row" }, [field("Chave interna", cat, "chave"), field("Nome exibido", cat, "nome")]));
-          box.appendChild(field("Ícone (Font Awesome)", cat, "icone", { placeholder: "ex: fas fa-store" }));
-          catWrap.appendChild(box);
-        });
-      }
-      drawCats();
-      catCard.appendChild(catWrap);
-      catCard.appendChild(el("button", { class: "btn btn-add", onclick: function () {
-        L.categorias.push({ chave: "", nome: "", icone: "fas fa-tag" }); drawCats();
-      } }, "+ Adicionar categoria"));
-      root.appendChild(catCard);
-
-      // --- Produtos ---
-      const prodCard = el("div", { class: "card" }, el("h2", null, "Produtos"));
-      const prodWrap = el("div");
-      function catOptions(selected) {
-        return L.categorias.map(function (c) {
-          const o = el("option", { value: c.chave }, c.nome || c.chave);
-          if (c.chave === selected) o.selected = true;
-          return o;
-        });
-      }
+      const wrap = el("div");
       function drawProdutos() {
-        prodWrap.innerHTML = "";
-        L.produtos.forEach(function (p, i) {
+        wrap.innerHTML = "";
+        PROD.forEach(function (p, i) {
           const box = el("div", { class: "item-box" });
-          box.appendChild(el("button", { class: "remove-x", title: "Remover produto", onclick: function () { L.produtos.splice(i, 1); drawProdutos(); } }, "✕"));
+          box.appendChild(el("button", { class: "remove-x", title: "Remover produto", onclick: function () { PROD.splice(i, 1); drawProdutos(); } }, "✕"));
           box.appendChild(el("div", { class: "row" }, [field("ID (único, sem espaços)", p, "id"), field("Nome", p, "nome")]));
-          // categoria
-          const sel = el("select", null, catOptions(p.categoria));
+
+          // categoria (select com os slugs válidos)
+          const sel = el("select", null, LOJA_CATS.map(function (c) {
+            const o = el("option", { value: c }, c);
+            if (c === p.categoria) o.selected = true;
+            return o;
+          }));
           sel.addEventListener("change", function () { p.categoria = sel.value; });
           box.appendChild(el("label", { class: "field" }, [el("span", null, "Categoria"), sel]));
-          box.appendChild(el("div", { class: "row" }, [field("Preço em R$ (0 = sob consulta)", p, "preco", { number: true, type: "number" })]));
+
+          // preço (vazio = null = "Sob consulta")
+          const precoInput = el("input", { type: "number", step: "0.01", min: "0" });
+          precoInput.value = (p.preco == null ? "" : p.preco);
+          precoInput.placeholder = "vazio = Sob consulta";
+          precoInput.addEventListener("input", function () {
+            const v = precoInput.value.trim();
+            p.preco = (v === "") ? null : (Number(v.replace(",", ".")) || 0);
+          });
+          box.appendChild(el("div", { class: "row" }, [
+            el("label", { class: "field" }, [el("span", null, "Preço (R$) — vazio = Sob consulta"), precoInput]),
+            field("Parcelas (nº — vazio/1 = não parcelar)", p, "parcelas", { number: true, type: "number" })
+          ]));
+
           box.appendChild(field("Descrição", p, "descricao", { area: true }));
-          box.appendChild(imageField("Imagem", p, "imagem"));
-          box.appendChild(checkbox("Marcar como 'Mais procurado' (destaque)", p, "destaque"));
-          prodWrap.appendChild(box);
+          box.appendChild(imageField("Imagem", p, "img"));
+          box.appendChild(el("div", { class: "row" }, [
+            checkbox("Destaque", p, "destaque"),
+            checkbox("Em estoque", p, "estoque")
+          ]));
+          wrap.appendChild(box);
         });
       }
       drawProdutos();
-      prodCard.appendChild(prodWrap);
-      prodCard.appendChild(el("button", { class: "btn btn-add", onclick: function () {
-        const primeira = (L.categorias[0] && L.categorias[0].chave) || "";
-        L.produtos.push({ id: "", nome: "", categoria: primeira, preco: 0, descricao: "", imagem: "", destaque: false });
+      card.appendChild(wrap);
+      card.appendChild(el("button", { class: "btn btn-add", onclick: function () {
+        PROD.push({ id: "", nome: "", categoria: "aulas", preco: 0, img: "", descricao: "", destaque: false, estoque: true });
         drawProdutos();
       } }, "+ Adicionar produto"));
-      root.appendChild(prodCard);
+      root.appendChild(card);
     }
 
     // ---------- Export ----------
@@ -939,13 +914,9 @@
         "const portfolioData = " + JSON.stringify(P, null, 2) + ";\n";
     }
 
-    function buildLojaFile() {
-      return "/**\n" +
-        " * Dados da Loja — Beach Tennis\n" +
-        " * Gerado pelo painel admin (admin.html).\n" +
-        " * Edite preferencialmente pelo admin para manter a estrutura.\n" +
-        " */\n\n" +
-        "const lojaData = " + JSON.stringify(L, null, 2) + ";\n";
+    function buildProdutosFile() {
+      // produtos.json é um array JSON puro (consumido via fetch pela loja).
+      return JSON.stringify(PROD, null, 2) + "\n";
     }
 
     document.getElementById("btn-download-horarios").addEventListener("click", function () {
@@ -955,19 +926,19 @@
       download("portfolio-data.js", buildPortfolioFile()); toast("portfolio-data.js baixado");
     });
     document.getElementById("btn-download-loja").addEventListener("click", function () {
-      download("loja-data.js", buildLojaFile()); toast("loja-data.js baixado");
+      download("produtos.json", buildProdutosFile()); toast("produtos.json baixado (coloque em assets/data/)");
     });
     document.getElementById("btn-download-all").addEventListener("click", function () {
       download("horarios-data.js", buildHorariosFile());
       download("portfolio-data.js", buildPortfolioFile());
-      download("loja-data.js", buildLojaFile());
+      download("produtos.json", buildProdutosFile());
       toast("Os 3 arquivos foram baixados");
     });
     document.getElementById("btn-preview").addEventListener("click", function () {
       const w = window.open("", "_blank");
       const sep = "\n\n/* ======================================== */\n\n";
       w.document.write("<pre style='padding:16px;font:13px monospace;white-space:pre-wrap'>" +
-        (buildHorariosFile() + sep + buildPortfolioFile() + sep + buildLojaFile())
+        (buildHorariosFile() + sep + buildPortfolioFile() + sep + "/* produtos.json */\n" + buildProdutosFile())
           .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") +
         "</pre>");
       w.document.title = "Pré-visualização dos dados";
@@ -989,8 +960,7 @@
       const fn = new Function(
         texto + "\n;return {" +
         "horariosData: typeof horariosData !== 'undefined' ? horariosData : null," +
-        "portfolioData: typeof portfolioData !== 'undefined' ? portfolioData : null," +
-        "lojaData: typeof lojaData !== 'undefined' ? lojaData : null" +
+        "portfolioData: typeof portfolioData !== 'undefined' ? portfolioData : null" +
         "};"
       );
       return fn();
@@ -1019,23 +989,29 @@
       const reader = new FileReader();
       reader.onload = function () {
         try {
-          const got = avaliarDados(String(reader.result));
+          const texto = String(reader.result);
           let carregou = null;
-          if (got.horariosData) {
-            H = structuredClone(got.horariosData);
-            renderHorarios(); renderContato();
-            carregou = "Horários";
-          } else if (got.portfolioData) {
-            P = structuredClone(got.portfolioData);
-            renderPortfolio();
-            carregou = "Portfólio";
-          } else if (got.lojaData) {
-            L = structuredClone(got.lojaData);
+          // produtos.json é um array JSON puro
+          let json = null;
+          try { json = JSON.parse(texto); } catch (e) { json = null; }
+          if (Array.isArray(json)) {
+            PROD = structuredClone(json);
             renderLoja();
-            carregou = "Loja";
+            carregou = "Loja (produtos.json)";
+          } else {
+            const got = avaliarDados(texto);
+            if (got.horariosData) {
+              H = structuredClone(got.horariosData);
+              renderHorarios(); renderContato();
+              carregou = "Horários";
+            } else if (got.portfolioData) {
+              P = structuredClone(got.portfolioData);
+              renderPortfolio();
+              carregou = "Portfólio";
+            }
           }
           if (carregou) toast("Arquivo de " + carregou + " importado");
-          else alert("Arquivo não reconhecido. Selecione um arquivo *-data.js exportado por este painel (horarios, portfolio ou loja).");
+          else alert("Arquivo não reconhecido. Selecione horarios-data.js, portfolio-data.js ou produtos.json.");
         } catch (e) {
           alert("Não foi possível ler o arquivo:\n" + e.message);
         }
@@ -1050,6 +1026,12 @@
     renderPortfolio();
     renderLoja();
     renderContato();
+
+    // Carrega os produtos da loja (produtos.json) e re-renderiza a aba Loja
+    fetch("assets/data/produtos.json?t=" + Date.now())
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (arr) { PROD = Array.isArray(arr) ? arr : []; renderLoja(); })
+      .catch(function () { PROD = []; renderLoja(); });
   }
   </script>
 </body>

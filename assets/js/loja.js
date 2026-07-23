@@ -86,8 +86,10 @@
 
     return '' +
       '<article class="loja__card" data-categoria="' + p.categoria + '">' +
-        '<div class="loja__card-img">' +
-          '<img src="' + (p.img || "") + '" alt="' + escapeAttr(p.nome) + '" loading="lazy" onerror="lojaPh(this,\'' + p.categoria + '\')">' +
+        '<div class="loja__card-img' + (p.img ? "" : " loja__card-img--ph") + '">' +
+          (p.img
+            ? '<img src="' + p.img + '" alt="' + escapeAttr(p.nome) + '" loading="lazy" onerror="lojaPh(this,\'' + p.categoria + '\')">'
+            : '<span class="loja__ph-ic"><i class="fas ' + (CAT_ICON[p.categoria] || "fa-store") + '"></i></span>') +
           '<span class="loja__card-cat">' + (CAT_LABEL[p.categoria] || p.categoria) + "</span>" +
           selo +
         "</div>" +
@@ -290,7 +292,15 @@
     var box = img.parentNode;
     if (!box) return;
     box.classList.add(mini ? "cart__item-img--ph" : "loja__card-img--ph");
-    box.innerHTML = '<i class="fas ' + (CAT_ICON[cat] || "fa-store") + '"></i>';
+    if (mini) {
+      box.innerHTML = '<i class="fas ' + (CAT_ICON[cat] || "fa-store") + '"></i>';
+    } else {
+      // substitui só a imagem quebrada pelo ícone (mantém etiqueta de categoria e selo)
+      var ph = document.createElement("span");
+      ph.className = "loja__ph-ic";
+      ph.innerHTML = '<i class="fas ' + (CAT_ICON[cat] || "fa-store") + '"></i>';
+      img.replaceWith(ph);
+    }
   };
 
   // ---------- Eventos ----------

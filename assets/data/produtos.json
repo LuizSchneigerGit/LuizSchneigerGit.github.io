@@ -26,7 +26,7 @@
     "categoria": "vestuario",
     "preco": 89.90,
     "parcelas": 3,
-    "img": "assets/img/produtos/camiseta.jpg",
+    "img": "",
     "descricao": "Camiseta dry-fit com proteção UV. Leve, respirável e estilosa para a areia.",
     "destaque": true,
     "estoque": true
@@ -36,7 +36,7 @@
     "nome": "Boné LS BT",
     "categoria": "vestuario",
     "preco": 59.90,
-    "img": "assets/img/produtos/bone.jpg",
+    "img": "",
     "descricao": "Boné esportivo com ajuste regulável. Proteção contra o sol nos treinos.",
     "destaque": false,
     "estoque": true
@@ -46,7 +46,7 @@
     "nome": "Viseira LS BT",
     "categoria": "vestuario",
     "preco": 45.00,
-    "img": "assets/img/produtos/viseira.jpg",
+    "img": "",
     "descricao": "Viseira leve com ajuste regulável, perfeita para os dias de sol.",
     "destaque": false,
     "estoque": false
@@ -56,7 +56,7 @@
     "nome": "Overgrip Pro (3 un.)",
     "categoria": "acessorios",
     "preco": 35.00,
-    "img": "assets/img/produtos/overgrip.jpg",
+    "img": "",
     "descricao": "Antiderrapante, alta absorção. Pack com 3 unidades.",
     "destaque": false,
     "estoque": true
@@ -66,7 +66,7 @@
     "nome": "Tubo de Bolas (3 un.)",
     "categoria": "equipamento",
     "preco": 49.90,
-    "img": "assets/img/produtos/bolas.jpg",
+    "img": "",
     "descricao": "Bolas oficiais de beach tennis (pressão reduzida), para treinos e jogos.",
     "destaque": false,
     "estoque": true
@@ -76,7 +76,7 @@
     "nome": "Raquete Beach Tennis Pro",
     "categoria": "equipamento",
     "preco": null,
-    "img": "assets/img/produtos/raquete.jpg",
+    "img": "",
     "descricao": "Raquete profissional de fibra de carbono. Modelos e valores sob consulta.",
     "destaque": false,
     "estoque": true
